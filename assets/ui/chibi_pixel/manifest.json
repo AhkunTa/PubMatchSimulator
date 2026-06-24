@@ -1,0 +1,34 @@
+{
+  "style": "chibi_cartoon_pixel_art",
+  "source_doc": "docs/MVP.md",
+  "canvas": {
+    "concepts": "1920x1080",
+    "backgrounds": "1920x1080",
+    "component_sheets": "2048x2048"
+  },
+  "scenes": {
+    "route_selection": {
+      "full_ui": "concepts/route-selection-full-ui.png",
+      "background": "backgrounds/route-selection-background.png",
+      "components": "components/route-selection-ui-components.png",
+      "prompt": "prompts/route-selection-full-ui.prompt.txt"
+    },
+    "battle": {
+      "full_ui": "concepts/battle-full-ui.png",
+      "background": "backgrounds/battle-background.png",
+      "components": "components/battle-event-ui-components.png",
+      "prompt": "prompts/battle-full-ui.prompt.txt"
+    },
+    "event_trigger": {
+      "full_ui": "concepts/event-trigger-full-ui.png",
+      "background": "backgrounds/event-trigger-background.png",
+      "components": "components/battle-event-ui-components.png",
+      "prompt": "prompts/event-trigger-full-ui.prompt.txt"
+    }
+  },
+  "notes": [
+    "Full UI images are visual references, not runtime-composited assets.",
+    "Background images are intended for UI overlay and intentionally avoid baked control panels.",
+    "Component sheets use #FF00FF backgrounds for chroma-key extraction or manual slicing."
+  ]
+}
