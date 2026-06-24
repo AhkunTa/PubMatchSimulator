@@ -11,8 +11,18 @@ config_version=5
 [application]
 
 config/name="pub-match-simulator"
+run/main_scene="res://scenes/match/route_map.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+RunState="*res://scripts/run_state.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 
 [physics]
 
