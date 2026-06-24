@@ -15,6 +15,42 @@ var run_stats := {
 	"accident_heat": 22,
 }
 
+var squad_members: Array[Dictionary] = [
+	{
+		"id": "player",
+		"name": "Player",
+		"role": "Leader",
+		"hp": 92,
+		"bag": 36,
+		"trust": 61,
+		"greed": 42,
+		"caution": 58,
+		"accent": Color(0.95, 0.77, 0.28),
+	},
+	{
+		"id": "aqiang",
+		"name": "A-Qiang",
+		"role": "Assaulter",
+		"hp": 78,
+		"bag": 54,
+		"trust": 47,
+		"greed": 74,
+		"caution": 35,
+		"accent": Color(0.44, 0.74, 0.98),
+	},
+	{
+		"id": "xiaoyu",
+		"name": "Xiao Yu",
+		"role": "Medic",
+		"hp": 86,
+		"bag": 28,
+		"trust": 72,
+		"greed": 26,
+		"caution": 69,
+		"accent": Color(0.58, 0.90, 0.56),
+	},
+]
+
 
 func choose_route_node(node: Dictionary) -> void:
 	var previous_node_id := current_node_id
