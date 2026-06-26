@@ -1,6 +1,103 @@
-[gd_scene format=3 uid="uid://c18jqwssr21ie"]
+[gd_scene load_steps=8 format=3 uid="uid://c18jqwssr21ie"]
 
 [ext_resource type="Script" uid="uid://jwi26k6wqqtn" path="res://scenes/match/route_map.gd" id="1_route"]
+[ext_resource type="Texture2D" uid="uid://d35e4lhd0gu6o" path="res://assets/ui/chibi_pixel/backgrounds/route-selection-background.png" id="2_background"]
+
+[sub_resource type="StyleBoxFlat" id="PanelDark"]
+bg_color = Color(0.06, 0.07, 0.09, 0.86)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.18, 0.22, 0.24, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="PanelRoute"]
+bg_color = Color(0.04, 0.05, 0.07, 0.82)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.16, 0.19, 0.22, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="PanelDetail"]
+bg_color = Color(0.06, 0.07, 0.09, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 0.95, 0.6, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="PanelBoard"]
+bg_color = Color(0.03, 0.04, 0.05, 0.55)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12, 0.16, 0.18, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="ButtonConfirm"]
+bg_color = Color(0.84, 0.63, 0.16, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.98, 0.84, 0.34, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="ButtonConfirmDisabled"]
+bg_color = Color(0.11, 0.11, 0.12, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.22, 0.2, 0.24, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
 
 [node name="RouteMap" type="Control" unique_id=1291587268]
 layout_mode = 3
@@ -11,12 +108,424 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_route")
 
-[node name="Node2D" type="Node2D" parent="." unique_id=1525052016]
-
-[node name="Control" type="Control" parent="." unique_id=1474407346]
+[node name="PixelBackground" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+z_index = -20
+texture = ExtResource("2_background")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="ReadableOverlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+z_index = -19
+color = Color(0.03, 0.025, 0.035, 0.36)
+
+[node name="Node2D" type="Node2D" parent="." unique_id=1525052016]
+
+[node name="RootMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 18
+
+[node name="RootColumn" type="VBoxContainer" parent="RootMargin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TopBar" type="PanelContainer" parent="RootMargin/RootColumn"]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+theme_override_styles/panel = SubResource("PanelDark")
+
+[node name="TopBarRow" type="HBoxContainer" parent="RootMargin/RootColumn/TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="TitleBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 34
+text = "Route Select"
+
+[node name="SubtitleLabel" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.72, 0.76, 1)
+theme_override_font_sizes/font_size = 18
+text = "Choose the next move"
+
+[node name="ThreatStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("PanelDark")
+
+[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat/StatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.89, 0.39, 0.33, 1)
+theme_override_font_sizes/font_size = 18
+text = "Threat"
+
+[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat/StatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "0/100"
+
+[node name="CohesionStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("PanelDark")
+
+[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat/StatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.85, 0.49, 1)
+theme_override_font_sizes/font_size = 18
+text = "Cohesion"
+
+[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat/StatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "0/100"
+
+[node name="LootStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("PanelDark")
+
+[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/LootStat"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/LootStat/StatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.77, 0.28, 1)
+theme_override_font_sizes/font_size = 18
+text = "Loot"
+
+[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/LootStat/StatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "0"
+
+[node name="HeatStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("PanelDark")
+
+[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/HeatStat"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/HeatStat/StatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.93, 0.45, 0.34, 1)
+theme_override_font_sizes/font_size = 18
+text = "Heat"
+
+[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/HeatStat/StatBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "0%"
+
+[node name="ContentRow" type="HBoxContainer" parent="RootMargin/RootColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="SquadPanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("PanelDark")
+
+[node name="SquadBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/SquadPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Heading" type="Label" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "Squad"
+
+[node name="Hint" type="Label" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.64, 0.69, 0.74, 1)
+theme_override_font_sizes/font_size = 16
+text = "All players and quick stats"
+
+[node name="SquadMemberList" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RoutePanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("PanelRoute")
+
+[node name="BoardFrame" type="MarginContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="BoardBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="CaptionRow" type="HBoxContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox"]
+layout_mode = 2
+
+[node name="CurrentStepLabel" type="Label" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/CaptionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.77, 0.28, 1)
+theme_override_font_sizes/font_size = 18
+text = "Step 0/0"
+
+[node name="CaptionSpacer" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/CaptionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MapHintLabel" type="Label" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/CaptionRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.64, 0.69, 0.74, 1)
+theme_override_font_sizes/font_size = 16
+text = "The route board stays centered and largest"
+
+[node name="BoardPanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("PanelBoard")
+
+[node name="RouteBoardCanvas" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/BoardPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(760, 620)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+clip_contents = true
+
+[node name="RouteLineLayer" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/BoardPanel/RouteBoardCanvas"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="RouteNodeLayer" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/BoardPanel/RouteBoardCanvas"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DetailPanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow"]
+custom_minimum_size = Vector2(420, 820)
+layout_mode = 2
+theme_override_styles/panel = SubResource("PanelDetail")
+
+[node name="DetailBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="DetailScroll" type="ScrollContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DetailScrollContent" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="Heading" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "Route Detail"
+
+[node name="DetailTitleLabel" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.99, 0.78, 1)
+theme_override_font_sizes/font_size = 34
+autowrap_mode = 3
+
+[node name="DetailSummaryLabel" type="RichTextLabel" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 190)
+layout_mode = 2
+theme_override_colors/default_color = Color(0.92, 0.92, 0.87, 1)
+theme_override_font_sizes/normal_font_size = 20
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[node name="TagsTitle" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.77, 0.3, 1)
+theme_override_font_sizes/font_size = 20
+text = "Tags"
+
+[node name="DetailTagFlow" type="HFlowContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="AttitudeTitle" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.77, 0.3, 1)
+theme_override_font_sizes/font_size = 20
+text = "Teammate Read"
+
+[node name="DetailAttitudeBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ConfirmButton" type="Button" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("ButtonConfirm")
+theme_override_styles/hover = SubResource("ButtonConfirm")
+theme_override_styles/pressed = SubResource("ButtonConfirm")
+theme_override_styles/disabled = SubResource("ButtonConfirmDisabled")
+text = "Confirm Route"
+
+[node name="LegendBar" type="PanelContainer" parent="RootMargin/RootColumn"]
+custom_minimum_size = Vector2(0, 94)
+layout_mode = 2
+theme_override_styles/panel = SubResource("PanelDark")
+
+[node name="LegendRow" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Title" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 24
+text = "Legend"
+
+[node name="CurrentLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/CurrentLegend"]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+color = Color(0.95, 0.77, 0.28, 1)
+
+[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/CurrentLegend"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
+theme_override_font_sizes/font_size = 18
+text = "Current"
+
+[node name="AvailableLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/AvailableLegend"]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+color = Color(0.68, 0.96, 0.56, 1)
+
+[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/AvailableLegend"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
+theme_override_font_sizes/font_size = 18
+text = "Available"
+
+[node name="VisitedLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/VisitedLegend"]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+color = Color(0.4, 0.83, 0.58, 1)
+
+[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/VisitedLegend"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
+theme_override_font_sizes/font_size = 18
+text = "Visited"
+
+[node name="LockedLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/LockedLegend"]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+color = Color(0.42, 0.42, 0.46, 1)
+
+[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/LockedLegend"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
+theme_override_font_sizes/font_size = 18
+text = "Locked"
+
+[node name="PathLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/PathLegend"]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+color = Color(0.82, 0.82, 0.82, 1)
+
+[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/PathLegend"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
+theme_override_font_sizes/font_size = 18
+text = "Path"

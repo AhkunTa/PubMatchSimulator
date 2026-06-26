@@ -1,10 +1,7 @@
 extends Control
 
 const ENCOUNTER_SCENE := "res://scenes/match/encounter.tscn"
-const BACKGROUND := preload("res://assets/ui/chibi_pixel/backgrounds/route-selection-background.png")
 
-const LEFT_PANEL_WIDTH := 300.0
-const RIGHT_PANEL_WIDTH := 420.0
 const ROUTE_BUTTON_SIZE := Vector2(132.0, 86.0)
 const ROUTE_PADDING := Vector2(84.0, 72.0)
 
@@ -15,6 +12,12 @@ var selected_node_id := ""
 var route_board_canvas: Control
 var route_line_layer: Control
 var route_node_layer: Control
+var squad_member_list: VBoxContainer
+var current_step_label: Label
+var threat_value_label: Label
+var cohesion_value_label: Label
+var loot_value_label: Label
+var heat_value_label: Label
 var detail_title_label: Label
 var detail_summary_label: RichTextLabel
 var detail_tag_flow: HFlowContainer
@@ -23,30 +26,45 @@ var confirm_button: Button
 
 
 func _ready() -> void:
-	_setup_background()
+	_bind_scene_nodes()
 	_setup_route_data()
-	_build_layout()
+	_populate_static_scene_data()
+	_add_route_buttons()
 	_update_available_nodes()
 	_select_first_available()
 	call_deferred("_refresh_route_board")
 
 
-func _setup_background() -> void:
-	var bg := TextureRect.new()
-	bg.name = "PixelBackground"
-	bg.texture = BACKGROUND
-	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bg.z_index = -20
-	add_child(bg)
+func _bind_scene_nodes() -> void:
+	route_board_canvas = %RouteBoardCanvas
+	route_line_layer = %RouteLineLayer
+	route_node_layer = %RouteNodeLayer
+	squad_member_list = %SquadMemberList
+	current_step_label = %CurrentStepLabel
+	threat_value_label = get_node("RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat/StatBox/Value")
+	cohesion_value_label = get_node("RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat/StatBox/Value")
+	loot_value_label = get_node("RootMargin/RootColumn/TopBar/TopBarRow/LootStat/StatBox/Value")
+	heat_value_label = get_node("RootMargin/RootColumn/TopBar/TopBarRow/HeatStat/StatBox/Value")
+	detail_title_label = %DetailTitleLabel
+	detail_summary_label = %DetailSummaryLabel
+	detail_tag_flow = %DetailTagFlow
+	detail_attitude_box = %DetailAttitudeBox
+	confirm_button = %ConfirmButton
 
-	var shade := ColorRect.new()
-	shade.name = "ReadableOverlay"
-	shade.color = Color(0.03, 0.025, 0.035, 0.36)
-	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	shade.z_index = -19
-	add_child(shade)
+	route_board_canvas.resized.connect(_refresh_route_board)
+	confirm_button.pressed.connect(_confirm_selected_node)
+
+
+func _populate_static_scene_data() -> void:
+	current_step_label.text = "Step %d/%d" % [RunState.run_stats["step"], RunState.run_stats["max_step"]]
+	threat_value_label.text = "%d/100" % RunState.run_stats["threat"]
+	cohesion_value_label.text = "%d/100" % RunState.run_stats["cohesion"]
+	loot_value_label.text = "%d" % RunState.run_stats["loot"]
+	heat_value_label.text = "%d%%" % RunState.run_stats["accident_heat"]
+
+	_clear_children(squad_member_list)
+	for member in RunState.squad_members:
+		squad_member_list.add_child(_build_member_card(member))
 
 
 func _setup_route_data() -> void:
@@ -67,255 +85,6 @@ func _setup_route_data() -> void:
 		_node("n5a", 5, 0.42, "Evac A", "Evac", "Mid", "Mid", ["Early evac"], [], -2, 2, 0, -4),
 		_node("n5b", 5, 0.66, "Evac B", "Evac", "High", "High", ["Final evac"], [], -4, 4, 0, -8),
 	]
-
-
-func _build_layout() -> void:
-	var root_margin := MarginContainer.new()
-	root_margin.name = "RootMargin"
-	root_margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root_margin.add_theme_constant_override("margin_left", 20)
-	root_margin.add_theme_constant_override("margin_top", 18)
-	root_margin.add_theme_constant_override("margin_right", 20)
-	root_margin.add_theme_constant_override("margin_bottom", 18)
-	add_child(root_margin)
-
-	var root_column := VBoxContainer.new()
-	root_column.add_theme_constant_override("separation", 16)
-	root_margin.add_child(root_column)
-
-	root_column.add_child(_build_top_bar())
-
-	var content_row := HBoxContainer.new()
-	content_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	content_row.add_theme_constant_override("separation", 16)
-	root_column.add_child(content_row)
-
-	content_row.add_child(_build_squad_panel())
-	content_row.add_child(_build_route_panel())
-	content_row.add_child(_build_detail_panel())
-
-	root_column.add_child(_build_legend_bar())
-
-
-func _build_top_bar() -> Control:
-	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(0, 88)
-	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.06, 0.07, 0.09, 0.86), Color(0.18, 0.22, 0.24)))
-
-	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 14)
-	panel.add_child(row)
-
-	var title_box := VBoxContainer.new()
-	title_box.custom_minimum_size = Vector2(220, 0)
-
-	var title := Label.new()
-	title.text = "Route Select"
-	title.add_theme_font_size_override("font_size", 34)
-	title.add_theme_color_override("font_color", Color(0.98, 0.95, 0.85))
-	title_box.add_child(title)
-
-	var subtitle := Label.new()
-	subtitle.text = "Choose the next move"
-	subtitle.add_theme_font_size_override("font_size", 18)
-	subtitle.add_theme_color_override("font_color", Color(0.66, 0.72, 0.76))
-	title_box.add_child(subtitle)
-	row.add_child(title_box)
-
-	row.add_child(_build_stat_card("Threat", "%d/100" % RunState.run_stats["threat"], Color(0.89, 0.39, 0.33)))
-	row.add_child(_build_stat_card("Cohesion", "%d/100" % RunState.run_stats["cohesion"], Color(0.68, 0.85, 0.49)))
-	row.add_child(_build_stat_card("Loot", "%d" % RunState.run_stats["loot"], Color(0.95, 0.77, 0.28)))
-	row.add_child(_build_stat_card("Heat", "%d%%" % RunState.run_stats["accident_heat"], Color(0.93, 0.45, 0.34)))
-
-	return panel
-
-
-func _build_squad_panel() -> Control:
-	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(LEFT_PANEL_WIDTH, 0)
-	panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.06, 0.07, 0.09, 0.86), Color(0.18, 0.22, 0.24)))
-
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 14)
-	panel.add_child(box)
-
-	var heading := Label.new()
-	heading.text = "Squad"
-	heading.add_theme_font_size_override("font_size", 28)
-	heading.add_theme_color_override("font_color", Color(0.98, 0.95, 0.85))
-	box.add_child(heading)
-
-	var hint := Label.new()
-	hint.text = "All players and quick stats"
-	hint.add_theme_font_size_override("font_size", 16)
-	hint.add_theme_color_override("font_color", Color(0.64, 0.69, 0.74))
-	box.add_child(hint)
-
-	for member in RunState.squad_members:
-		box.add_child(_build_member_card(member))
-
-	return panel
-
-
-func _build_route_panel() -> Control:
-	var panel := PanelContainer.new()
-	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.04, 0.05, 0.07, 0.82), Color(0.16, 0.19, 0.22)))
-
-	var board_frame := MarginContainer.new()
-	board_frame.add_theme_constant_override("margin_left", 16)
-	board_frame.add_theme_constant_override("margin_top", 16)
-	board_frame.add_theme_constant_override("margin_right", 16)
-	board_frame.add_theme_constant_override("margin_bottom", 16)
-	panel.add_child(board_frame)
-
-	var board_box := VBoxContainer.new()
-	board_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	board_box.add_theme_constant_override("separation", 12)
-	board_frame.add_child(board_box)
-
-	var caption := HBoxContainer.new()
-	var current_step := Label.new()
-	current_step.text = "Step %d/%d" % [RunState.run_stats["step"], RunState.run_stats["max_step"]]
-	current_step.add_theme_font_size_override("font_size", 18)
-	current_step.add_theme_color_override("font_color", Color(0.95, 0.77, 0.28))
-	caption.add_child(current_step)
-
-	var stretch := Control.new()
-	stretch.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	caption.add_child(stretch)
-
-	var map_hint := Label.new()
-	map_hint.text = "The route board stays centered and largest"
-	map_hint.add_theme_font_size_override("font_size", 16)
-	map_hint.add_theme_color_override("font_color", Color(0.64, 0.69, 0.74))
-	caption.add_child(map_hint)
-	board_box.add_child(caption)
-
-	var board_panel := PanelContainer.new()
-	board_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	board_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	board_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.03, 0.04, 0.05, 0.55), Color(0.12, 0.16, 0.18)))
-	board_box.add_child(board_panel)
-
-	route_board_canvas = Control.new()
-	route_board_canvas.custom_minimum_size = Vector2(760, 620)
-	route_board_canvas.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	route_board_canvas.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	route_board_canvas.clip_contents = true
-	route_board_canvas.resized.connect(_refresh_route_board)
-	board_panel.add_child(route_board_canvas)
-
-	route_line_layer = Control.new()
-	route_line_layer.name = "RouteLineLayer"
-	route_line_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	route_line_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	route_board_canvas.add_child(route_line_layer)
-
-	route_node_layer = Control.new()
-	route_node_layer.name = "RouteNodeLayer"
-	route_node_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	route_board_canvas.add_child(route_node_layer)
-
-	_add_route_buttons()
-	return panel
-
-
-func _build_detail_panel() -> Control:
-	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(RIGHT_PANEL_WIDTH, 0)
-	panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.06, 0.07, 0.09, 0.88), Color(0.45, 0.95, 0.60)))
-
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 16)
-	panel.add_child(box)
-
-	var heading := Label.new()
-	heading.text = "Route Detail"
-	heading.add_theme_font_size_override("font_size", 28)
-	heading.add_theme_color_override("font_color", Color(0.98, 0.95, 0.85))
-	box.add_child(heading)
-
-	detail_title_label = Label.new()
-	detail_title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	detail_title_label.add_theme_font_size_override("font_size", 34)
-	detail_title_label.add_theme_color_override("font_color", Color(0.95, 0.99, 0.78))
-	box.add_child(detail_title_label)
-
-	detail_summary_label = RichTextLabel.new()
-	detail_summary_label.bbcode_enabled = true
-	detail_summary_label.fit_content = true
-	detail_summary_label.scroll_active = false
-	detail_summary_label.custom_minimum_size = Vector2(0, 190)
-	detail_summary_label.add_theme_font_size_override("normal_font_size", 20)
-	detail_summary_label.add_theme_color_override("default_color", Color(0.92, 0.92, 0.87))
-	box.add_child(detail_summary_label)
-
-	var tag_title := Label.new()
-	tag_title.text = "Tags"
-	tag_title.add_theme_font_size_override("font_size", 20)
-	tag_title.add_theme_color_override("font_color", Color(0.94, 0.77, 0.30))
-	box.add_child(tag_title)
-
-	detail_tag_flow = HFlowContainer.new()
-	detail_tag_flow.add_theme_constant_override("h_separation", 8)
-	detail_tag_flow.add_theme_constant_override("v_separation", 8)
-	box.add_child(detail_tag_flow)
-
-	var attitude_title := Label.new()
-	attitude_title.text = "Teammate Read"
-	attitude_title.add_theme_font_size_override("font_size", 20)
-	attitude_title.add_theme_color_override("font_color", Color(0.94, 0.77, 0.30))
-	box.add_child(attitude_title)
-
-	detail_attitude_box = VBoxContainer.new()
-	detail_attitude_box.add_theme_constant_override("separation", 10)
-	box.add_child(detail_attitude_box)
-
-	var spacer := Control.new()
-	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	box.add_child(spacer)
-
-	confirm_button = Button.new()
-	confirm_button.text = "Confirm Route"
-	confirm_button.custom_minimum_size = Vector2(0, 76)
-	confirm_button.add_theme_font_size_override("font_size", 30)
-	confirm_button.add_theme_stylebox_override("normal", _button_style(Color(0.84, 0.63, 0.16), Color(0.98, 0.84, 0.34)))
-	confirm_button.add_theme_stylebox_override("hover", _button_style(Color(0.92, 0.71, 0.22), Color(1.0, 0.93, 0.52)))
-	confirm_button.add_theme_stylebox_override("disabled", _button_style(Color(0.11, 0.11, 0.12), Color(0.22, 0.20, 0.24)))
-	confirm_button.pressed.connect(_confirm_selected_node)
-	box.add_child(confirm_button)
-
-	return panel
-
-
-func _build_legend_bar() -> Control:
-	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(0, 94)
-	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.06, 0.07, 0.09, 0.84), Color(0.18, 0.22, 0.24)))
-
-	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 14)
-	panel.add_child(row)
-
-	var title := Label.new()
-	title.text = "Legend"
-	title.add_theme_font_size_override("font_size", 24)
-	title.add_theme_color_override("font_color", Color(0.98, 0.95, 0.85))
-	row.add_child(title)
-
-	row.add_child(_build_legend_pill("Current", Color(0.95, 0.77, 0.28)))
-	row.add_child(_build_legend_pill("Available", Color(0.68, 0.96, 0.56)))
-	row.add_child(_build_legend_pill("Visited", Color(0.40, 0.83, 0.58)))
-	row.add_child(_build_legend_pill("Locked", Color(0.42, 0.42, 0.46)))
-	row.add_child(_build_legend_pill("Path", Color(0.82, 0.82, 0.82)))
-
-	return panel
 
 
 func _build_member_card(member: Dictionary) -> Control:
@@ -370,48 +139,6 @@ func _build_member_card(member: Dictionary) -> Control:
 	box.add_child(note)
 
 	return panel
-
-
-func _build_stat_card(label_text: String, value_text: String, accent: Color) -> Control:
-	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(220, 0)
-	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.08, 0.09, 0.11, 0.86), Color(0.18, 0.22, 0.24)))
-
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 8)
-	panel.add_child(box)
-
-	var label := Label.new()
-	label.text = label_text
-	label.add_theme_font_size_override("font_size", 18)
-	label.add_theme_color_override("font_color", accent)
-	box.add_child(label)
-
-	var value := Label.new()
-	value.text = value_text
-	value.add_theme_font_size_override("font_size", 28)
-	value.add_theme_color_override("font_color", Color(0.98, 0.95, 0.85))
-	box.add_child(value)
-
-	return panel
-
-
-func _build_legend_pill(text: String, color: Color) -> Control:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)
-
-	var swatch := ColorRect.new()
-	swatch.custom_minimum_size = Vector2(18, 18)
-	swatch.color = color
-	row.add_child(swatch)
-
-	var label := Label.new()
-	label.text = text
-	label.add_theme_font_size_override("font_size", 18)
-	label.add_theme_color_override("font_color", Color(0.92, 0.92, 0.87))
-	row.add_child(label)
-
-	return row
 
 
 func _build_small_badge(text: String, color: Color) -> Control:
