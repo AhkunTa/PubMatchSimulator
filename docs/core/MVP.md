@@ -3,7 +3,7 @@
 > 文档版本：0.5  
 > 项目阶段：最小可玩原型  
 > MVP 场景范围：路线选择场景、事件/互坑场景  
-> 关联文档：[游戏设计总览](GAME_DESIGN.md) · [MVP 卡牌基础池](CARD_POOL_MVP.md) · [AI 响应权重 MVP](AI_RESPONSE_MVP.md) · [节点内结算 MVP](ENCOUNTER_RESOLUTION_MVP.md) · [角色数值与成长](CHARACTER_AND_PROGRESSION.md) · [场景与界面流程](SCENE_DESIGN.md) · [技术架构](SYSTEM_ARCHITECTURE.md)
+> 关联文档：[游戏设计总览](GAME_DESIGN.md) · [MVP 卡牌基础池](../systems/CARD_POOL_MVP.md) · [AI 响应权重 MVP](../systems/AI_RESPONSE_MVP.md) · [节点内结算 MVP](../systems/ENCOUNTER_RESOLUTION_MVP.md) · [角色数值与成长](../systems/CHARACTER_AND_PROGRESSION.md) · [场景与界面流程](../presentation/SCENE_DESIGN.md) · [技术架构](../technical/SYSTEM_ARCHITECTURE.md)
 
 ## 1. MVP 一句话定义
 
@@ -786,9 +786,9 @@ MVP 至少记录：
 
 实现事件/互坑场景前，先以以下三份文档作为规则来源：
 
-1. [MVP 卡牌基础池](CARD_POOL_MVP.md)：定义 12 张基础牌、牌面效果、AI 信号标签、风险标签和抽弃牌规则。
-2. [AI 响应权重 MVP](AI_RESPONSE_MVP.md)：定义 AI 行为候选、权重公式、词条修正、喊话修正和解释文本。
-3. [节点内结算 MVP](ENCOUNTER_RESOLUTION_MVP.md)：定义回合状态机、敌方模板、伤害/压制/搜刮/抢包/撤退/节点结束条件。
+1. [MVP 卡牌基础池](../systems/CARD_POOL_MVP.md)：定义 12 张基础牌、牌面效果、AI 信号标签、风险标签和抽弃牌规则。
+2. [AI 响应权重 MVP](../systems/AI_RESPONSE_MVP.md)：定义 AI 行为候选、权重公式、词条修正、喊话修正和解释文本。
+3. [节点内结算 MVP](../systems/ENCOUNTER_RESOLUTION_MVP.md)：定义回合状态机、敌方模板、伤害/压制/搜刮/抢包/撤退/节点结束条件。
 
 这三份文档优先于本文中的摘要描述。若数值冲突，以实现级规则文档为准，再回写同步 MVP 摘要。
 

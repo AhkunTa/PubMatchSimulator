@@ -1,7 +1,7 @@
 # MVP 卡牌基础池
 
 > 目标：把 `12` 张基础行动牌定义到可直接实现、可测试、可调数值的粒度。  
-> 关联文档：[MVP](MVP.md) · [节点内 3v3 半自动卡牌战基础设计](superpowers/specs/2026-06-26-node-card-combat-design.md) · [AI 响应权重 MVP](AI_RESPONSE_MVP.md) · [节点内结算 MVP](ENCOUNTER_RESOLUTION_MVP.md)
+> 关联文档：[MVP](../core/MVP.md) · [节点内 3v3 半自动卡牌战基础设计](../superpowers/specs/2026-06-26-node-card-combat-design.md) · [AI 响应权重 MVP](AI_RESPONSE_MVP.md) · [节点内结算 MVP](ENCOUNTER_RESOLUTION_MVP.md)
 
 ## 1. 设计边界
 

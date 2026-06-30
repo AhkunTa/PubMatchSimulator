@@ -1,7 +1,7 @@
 # 节点内结算 MVP
 
 > 目标：定义单个事件节点中的回合状态机、结算顺序、敌方模板、资源掉落、抢包和节点结束条件。  
-> 关联文档：[MVP](MVP.md) · [MVP 卡牌基础池](CARD_POOL_MVP.md) · [AI 响应权重 MVP](AI_RESPONSE_MVP.md) · [技术架构](SYSTEM_ARCHITECTURE.md)
+> 关联文档：[MVP](../core/MVP.md) · [MVP 卡牌基础池](CARD_POOL_MVP.md) · [AI 响应权重 MVP](AI_RESPONSE_MVP.md) · [技术架构](../technical/SYSTEM_ARCHITECTURE.md)
 
 ## 1. 节点内目标
 

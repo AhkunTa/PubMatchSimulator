@@ -1,7 +1,7 @@
 # AI 响应权重 MVP
 
 > 目标：定义两名 AI 队友在玩家出牌后的行为候选、权重公式和可解释输出。  
-> 关联文档：[MVP](MVP.md) · [MVP 卡牌基础池](CARD_POOL_MVP.md) · [节点内结算 MVP](ENCOUNTER_RESOLUTION_MVP.md)
+> 关联文档：[MVP](../core/MVP.md) · [MVP 卡牌基础池](CARD_POOL_MVP.md) · [节点内结算 MVP](ENCOUNTER_RESOLUTION_MVP.md)
 
 ## 1. 核心原则
 

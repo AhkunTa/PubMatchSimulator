@@ -1,9 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://c18jqwssr21ie"]
+[gd_scene format=3 uid="uid://c18jqwssr21ie"]
 
 [ext_resource type="Script" uid="uid://jwi26k6wqqtn" path="res://scenes/match/route_map.gd" id="1_route"]
 [ext_resource type="Texture2D" uid="uid://d35e4lhd0gu6o" path="res://assets/ui/chibi_pixel/backgrounds/route-selection-background.png" id="2_background"]
 
 [sub_resource type="StyleBoxFlat" id="PanelDark"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
 bg_color = Color(0.06, 0.07, 0.09, 0.86)
 border_width_left = 2
 border_width_top = 2
@@ -14,12 +18,12 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="PanelRoute"]
 content_margin_left = 16.0
 content_margin_top = 16.0
 content_margin_right = 16.0
 content_margin_bottom = 16.0
-
-[sub_resource type="StyleBoxFlat" id="PanelRoute"]
 bg_color = Color(0.04, 0.05, 0.07, 0.82)
 border_width_left = 2
 border_width_top = 2
@@ -30,28 +34,12 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-
-[sub_resource type="StyleBoxFlat" id="PanelDetail"]
-bg_color = Color(0.06, 0.07, 0.09, 0.88)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.45, 0.95, 0.6, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxFlat" id="PanelBoard"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
 bg_color = Color(0.03, 0.04, 0.05, 0.55)
 border_width_left = 2
 border_width_top = 2
@@ -62,12 +50,28 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="PanelDetail"]
 content_margin_left = 16.0
 content_margin_top = 16.0
 content_margin_right = 16.0
 content_margin_bottom = 16.0
+bg_color = Color(0.06, 0.07, 0.09, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 0.95, 0.6, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="ButtonConfirm"]
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
 bg_color = Color(0.84, 0.63, 0.16, 1)
 border_width_left = 3
 border_width_top = 3
@@ -78,12 +82,12 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="ButtonConfirmDisabled"]
 content_margin_left = 10.0
 content_margin_top = 8.0
 content_margin_right = 10.0
 content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="ButtonConfirmDisabled"]
 bg_color = Color(0.11, 0.11, 0.12, 1)
 border_width_left = 3
 border_width_top = 3
@@ -94,10 +98,6 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
-content_margin_left = 10.0
-content_margin_top = 8.0
-content_margin_right = 10.0
-content_margin_bottom = 8.0
 
 [node name="RouteMap" type="Control" unique_id=1291587268]
 layout_mode = 3
@@ -108,7 +108,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_route")
 
-[node name="PixelBackground" type="TextureRect" parent="."]
+[node name="PixelBackground" type="TextureRect" parent="." unique_id=434836965]
+z_index = -20
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -116,12 +117,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-z_index = -20
 texture = ExtResource("2_background")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="ReadableOverlay" type="ColorRect" parent="."]
+[node name="ReadableOverlay" type="ColorRect" parent="." unique_id=2043124048]
+z_index = -19
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -129,12 +130,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-z_index = -19
 color = Color(0.03, 0.025, 0.035, 0.36)
 
 [node name="Node2D" type="Node2D" parent="." unique_id=1525052016]
 
-[node name="RootMargin" type="MarginContainer" parent="."]
+[node name="RootMargin" type="MarginContainer" parent="." unique_id=1536555982]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -146,206 +146,206 @@ theme_override_constants/margin_top = 18
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 18
 
-[node name="RootColumn" type="VBoxContainer" parent="RootMargin"]
+[node name="RootColumn" type="VBoxContainer" parent="RootMargin" unique_id=489223235]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="TopBar" type="PanelContainer" parent="RootMargin/RootColumn"]
+[node name="TopBar" type="PanelContainer" parent="RootMargin/RootColumn" unique_id=611167763]
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_styles/panel = SubResource("PanelDark")
 
-[node name="TopBarRow" type="HBoxContainer" parent="RootMargin/RootColumn/TopBar"]
+[node name="TopBarRow" type="HBoxContainer" parent="RootMargin/RootColumn/TopBar" unique_id=1604014351]
 layout_mode = 2
 theme_override_constants/separation = 14
 alignment = 1
 
-[node name="TitleBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow"]
+[node name="TitleBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow" unique_id=1118131107]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 
-[node name="TitleLabel" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/TitleBox"]
+[node name="TitleLabel" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/TitleBox" unique_id=1592655689]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 34
 text = "Route Select"
 
-[node name="SubtitleLabel" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/TitleBox"]
+[node name="SubtitleLabel" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/TitleBox" unique_id=940822863]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.66, 0.72, 0.76, 1)
 theme_override_font_sizes/font_size = 18
 text = "Choose the next move"
 
-[node name="ThreatStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow"]
+[node name="ThreatStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow" unique_id=1972196987]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("PanelDark")
 
-[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat"]
+[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat" unique_id=463214828]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat/StatBox"]
+[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat/StatBox" unique_id=1841877301]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.89, 0.39, 0.33, 1)
 theme_override_font_sizes/font_size = 18
 text = "Threat"
 
-[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat/StatBox"]
+[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat/StatBox" unique_id=795765164]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 28
 text = "0/100"
 
-[node name="CohesionStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow"]
+[node name="CohesionStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow" unique_id=572911964]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("PanelDark")
 
-[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat"]
+[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat" unique_id=1236059809]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat/StatBox"]
+[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat/StatBox" unique_id=1892599920]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.68, 0.85, 0.49, 1)
 theme_override_font_sizes/font_size = 18
 text = "Cohesion"
 
-[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat/StatBox"]
+[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat/StatBox" unique_id=197810666]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 28
 text = "0/100"
 
-[node name="LootStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow"]
+[node name="LootStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow" unique_id=180747792]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("PanelDark")
 
-[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/LootStat"]
+[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/LootStat" unique_id=536673980]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/LootStat/StatBox"]
+[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/LootStat/StatBox" unique_id=1800085423]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.77, 0.28, 1)
 theme_override_font_sizes/font_size = 18
 text = "Loot"
 
-[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/LootStat/StatBox"]
+[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/LootStat/StatBox" unique_id=48654401]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 28
 text = "0"
 
-[node name="HeatStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow"]
+[node name="HeatStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow" unique_id=505619225]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("PanelDark")
 
-[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/HeatStat"]
+[node name="StatBox" type="VBoxContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow/HeatStat" unique_id=110726734]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/HeatStat/StatBox"]
+[node name="Label" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/HeatStat/StatBox" unique_id=327784884]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.93, 0.45, 0.34, 1)
 theme_override_font_sizes/font_size = 18
 text = "Heat"
 
-[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/HeatStat/StatBox"]
+[node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/HeatStat/StatBox" unique_id=1016634639]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 28
 text = "0%"
 
-[node name="ContentRow" type="HBoxContainer" parent="RootMargin/RootColumn"]
+[node name="ContentRow" type="HBoxContainer" parent="RootMargin/RootColumn" unique_id=1124777119]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 16
 
-[node name="SquadPanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow"]
+[node name="SquadPanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow" unique_id=568609042]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("PanelDark")
 
-[node name="SquadBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/SquadPanel"]
+[node name="SquadBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/SquadPanel" unique_id=1275389457]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="Heading" type="Label" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox"]
+[node name="Heading" type="Label" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox" unique_id=755764423]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 28
 text = "Squad"
 
-[node name="Hint" type="Label" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox"]
+[node name="Hint" type="Label" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox" unique_id=917826868]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.64, 0.69, 0.74, 1)
 theme_override_font_sizes/font_size = 16
 text = "All players and quick stats"
 
-[node name="SquadMemberList" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox"]
+[node name="SquadMemberList" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox" unique_id=1280453495]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="RoutePanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow"]
+[node name="RoutePanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow" unique_id=1712227255]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("PanelRoute")
 
-[node name="BoardFrame" type="MarginContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel"]
+[node name="BoardFrame" type="MarginContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel" unique_id=1776024757]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="BoardBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame"]
+[node name="BoardBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame" unique_id=1134287425]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="CaptionRow" type="HBoxContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox"]
+[node name="CaptionRow" type="HBoxContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox" unique_id=1220340286]
 layout_mode = 2
 
-[node name="CurrentStepLabel" type="Label" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/CaptionRow"]
+[node name="CurrentStepLabel" type="Label" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/CaptionRow" unique_id=392565531]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.77, 0.28, 1)
 theme_override_font_sizes/font_size = 18
 text = "Step 0/0"
 
-[node name="CaptionSpacer" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/CaptionRow"]
+[node name="CaptionSpacer" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/CaptionRow" unique_id=425487065]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MapHintLabel" type="Label" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/CaptionRow"]
+[node name="MapHintLabel" type="Label" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/CaptionRow" unique_id=2015023494]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.64, 0.69, 0.74, 1)
 theme_override_font_sizes/font_size = 16
 text = "The route board stays centered and largest"
 
-[node name="BoardPanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox"]
+[node name="BoardPanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox" unique_id=456578828]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("PanelBoard")
 
-[node name="RouteBoardCanvas" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/BoardPanel"]
+[node name="RouteBoardCanvas" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/BoardPanel" unique_id=1361732323]
 unique_name_in_owner = true
+clip_contents = true
 custom_minimum_size = Vector2(760, 620)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-clip_contents = true
 
-[node name="RouteLineLayer" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/BoardPanel/RouteBoardCanvas"]
+[node name="RouteLineLayer" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/BoardPanel/RouteBoardCanvas" unique_id=2066707720]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -355,7 +355,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="RouteNodeLayer" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/BoardPanel/RouteBoardCanvas"]
+[node name="RouteNodeLayer" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/BoardPanel/RouteBoardCanvas" unique_id=2000341420]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -364,38 +364,38 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="DetailPanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow"]
+[node name="DetailPanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow" unique_id=1946624863]
 custom_minimum_size = Vector2(420, 820)
 layout_mode = 2
 theme_override_styles/panel = SubResource("PanelDetail")
 
-[node name="DetailBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel"]
+[node name="DetailBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel" unique_id=1308937241]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="DetailScroll" type="ScrollContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox"]
+[node name="DetailScroll" type="ScrollContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox" unique_id=565726406]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="DetailScrollContent" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll"]
+[node name="DetailScrollContent" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll" unique_id=1122665936]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 16
 
-[node name="Heading" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+[node name="Heading" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent" unique_id=1813588705]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 28
 text = "Route Detail"
 
-[node name="DetailTitleLabel" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+[node name="DetailTitleLabel" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent" unique_id=827262006]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.99, 0.78, 1)
 theme_override_font_sizes/font_size = 34
 autowrap_mode = 3
 
-[node name="DetailSummaryLabel" type="RichTextLabel" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+[node name="DetailSummaryLabel" type="RichTextLabel" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent" unique_id=156225392]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 190)
 layout_mode = 2
@@ -405,126 +405,126 @@ bbcode_enabled = true
 fit_content = true
 scroll_active = false
 
-[node name="TagsTitle" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+[node name="TagsTitle" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent" unique_id=1631492942]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.77, 0.3, 1)
 theme_override_font_sizes/font_size = 20
 text = "Tags"
 
-[node name="DetailTagFlow" type="HFlowContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+[node name="DetailTagFlow" type="HFlowContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent" unique_id=1779102666]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 
-[node name="AttitudeTitle" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+[node name="AttitudeTitle" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent" unique_id=1151843321]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.77, 0.3, 1)
 theme_override_font_sizes/font_size = 20
 text = "Teammate Read"
 
-[node name="DetailAttitudeBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent"]
+[node name="DetailAttitudeBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent" unique_id=1287594761]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ConfirmButton" type="Button" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox"]
+[node name="ConfirmButton" type="Button" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox" unique_id=1824349077]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("ButtonConfirm")
-theme_override_styles/hover = SubResource("ButtonConfirm")
 theme_override_styles/pressed = SubResource("ButtonConfirm")
+theme_override_styles/hover = SubResource("ButtonConfirm")
 theme_override_styles/disabled = SubResource("ButtonConfirmDisabled")
 text = "Confirm Route"
 
-[node name="LegendBar" type="PanelContainer" parent="RootMargin/RootColumn"]
+[node name="LegendBar" type="PanelContainer" parent="RootMargin/RootColumn" unique_id=1237830199]
 custom_minimum_size = Vector2(0, 94)
 layout_mode = 2
 theme_override_styles/panel = SubResource("PanelDark")
 
-[node name="LegendRow" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar"]
+[node name="LegendRow" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar" unique_id=879759823]
 layout_mode = 2
 theme_override_constants/separation = 14
 alignment = 1
 
-[node name="Title" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+[node name="Title" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow" unique_id=459502923]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 24
 text = "Legend"
 
-[node name="CurrentLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+[node name="CurrentLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow" unique_id=1332443864]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/CurrentLegend"]
+[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/CurrentLegend" unique_id=746627185]
 custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
 color = Color(0.95, 0.77, 0.28, 1)
 
-[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/CurrentLegend"]
+[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/CurrentLegend" unique_id=804783580]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
 theme_override_font_sizes/font_size = 18
 text = "Current"
 
-[node name="AvailableLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+[node name="AvailableLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow" unique_id=46652822]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/AvailableLegend"]
+[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/AvailableLegend" unique_id=2042649270]
 custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
 color = Color(0.68, 0.96, 0.56, 1)
 
-[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/AvailableLegend"]
+[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/AvailableLegend" unique_id=1498946462]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
 theme_override_font_sizes/font_size = 18
 text = "Available"
 
-[node name="VisitedLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+[node name="VisitedLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow" unique_id=886610000]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/VisitedLegend"]
+[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/VisitedLegend" unique_id=484287646]
 custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
 color = Color(0.4, 0.83, 0.58, 1)
 
-[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/VisitedLegend"]
+[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/VisitedLegend" unique_id=468996530]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
 theme_override_font_sizes/font_size = 18
 text = "Visited"
 
-[node name="LockedLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+[node name="LockedLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow" unique_id=392319181]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/LockedLegend"]
+[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/LockedLegend" unique_id=1913389320]
 custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
 color = Color(0.42, 0.42, 0.46, 1)
 
-[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/LockedLegend"]
+[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/LockedLegend" unique_id=1545054418]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
 theme_override_font_sizes/font_size = 18
 text = "Locked"
 
-[node name="PathLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow"]
+[node name="PathLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow" unique_id=2012014641]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/PathLegend"]
+[node name="Swatch" type="ColorRect" parent="RootMargin/RootColumn/LegendBar/LegendRow/PathLegend" unique_id=358073384]
 custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
 color = Color(0.82, 0.82, 0.82, 1)
 
-[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/PathLegend"]
+[node name="Label" type="Label" parent="RootMargin/RootColumn/LegendBar/LegendRow/PathLegend" unique_id=1924924907]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
 theme_override_font_sizes/font_size = 18

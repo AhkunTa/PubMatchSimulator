@@ -7,7 +7,7 @@ const ROUTE_PADDING := Vector2(84.0, 72.0)
 
 var route_nodes: Array[Dictionary] = []
 var node_buttons: Dictionary = {}
-var selected_node_id := ""
+var selected_node_id: String = ""
 
 var route_board_canvas: Control
 var route_line_layer: Control
@@ -88,40 +88,40 @@ func _setup_route_data() -> void:
 
 
 func _build_member_card(member: Dictionary) -> Control:
-	var panel := PanelContainer.new()
+	var panel: PanelContainer = PanelContainer.new()
 	panel.custom_minimum_size = Vector2(0, 164)
 	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.08, 0.09, 0.11, 0.88), member["accent"]))
 
-	var box := VBoxContainer.new()
+	var box: VBoxContainer = VBoxContainer.new()
 	box.add_theme_constant_override("separation", 10)
 	panel.add_child(box)
 
-	var header := HBoxContainer.new()
+	var header: HBoxContainer = HBoxContainer.new()
 	header.add_theme_constant_override("separation", 10)
 	box.add_child(header)
 
-	var avatar := ColorRect.new()
+	var avatar: ColorRect = ColorRect.new()
 	avatar.custom_minimum_size = Vector2(54, 54)
 	avatar.color = member["accent"]
 	header.add_child(avatar)
 
-	var name_box := VBoxContainer.new()
+	var name_box: VBoxContainer = VBoxContainer.new()
 	name_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(name_box)
 
-	var name_label := Label.new()
+	var name_label: Label = Label.new()
 	name_label.text = "%s%s" % [member["name"], " (You)" if member["id"] == "player" else ""]
 	name_label.add_theme_font_size_override("font_size", 24)
 	name_label.add_theme_color_override("font_color", Color(0.98, 0.95, 0.85))
 	name_box.add_child(name_label)
 
-	var role_label := Label.new()
+	var role_label: Label = Label.new()
 	role_label.text = String(member["role"])
 	role_label.add_theme_font_size_override("font_size", 16)
 	role_label.add_theme_color_override("font_color", Color(0.64, 0.69, 0.74))
 	name_box.add_child(role_label)
 
-	var badge_flow := HFlowContainer.new()
+	var badge_flow: HFlowContainer = HFlowContainer.new()
 	badge_flow.add_theme_constant_override("h_separation", 8)
 	badge_flow.add_theme_constant_override("v_separation", 8)
 	box.add_child(badge_flow)
@@ -131,7 +131,7 @@ func _build_member_card(member: Dictionary) -> Control:
 	badge_flow.add_child(_build_small_badge("Trust %d" % member["trust"], Color(0.50, 0.85, 0.54)))
 	badge_flow.add_child(_build_small_badge("Care %d" % member["caution"], Color(0.41, 0.72, 0.96)))
 
-	var note := Label.new()
+	var note: Label = Label.new()
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.text = _member_summary(member)
 	note.add_theme_font_size_override("font_size", 15)
@@ -142,10 +142,10 @@ func _build_member_card(member: Dictionary) -> Control:
 
 
 func _build_small_badge(text: String, color: Color) -> Control:
-	var panel := PanelContainer.new()
+	var panel: PanelContainer = PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", _badge_style(color))
 
-	var label := Label.new()
+	var label: Label = Label.new()
 	label.text = text
 	label.add_theme_font_size_override("font_size", 14)
 	label.add_theme_color_override("font_color", Color(0.96, 0.97, 0.98))
@@ -155,7 +155,7 @@ func _build_small_badge(text: String, color: Color) -> Control:
 
 func _add_route_buttons() -> void:
 	for node in route_nodes:
-		var button := Button.new()
+		var button: Button = Button.new()
 		button.name = "RouteButton_%s" % node["id"]
 		button.text = "%s\n%s" % [_type_icon(node["type"]), node["title"]]
 		button.custom_minimum_size = ROUTE_BUTTON_SIZE
@@ -175,7 +175,7 @@ func _refresh_route_board() -> void:
 		return
 
 	for node in route_nodes:
-		var button: Button = node_buttons.get(node["id"])
+		var button: Button = node_buttons.get(node["id"]) as Button
 		if button == null:
 			continue
 		button.position = _node_position(node["layer"], node["row"])
@@ -183,29 +183,29 @@ func _refresh_route_board() -> void:
 	_clear_children(route_line_layer)
 
 	for node in route_nodes:
-		var from_button: Button = node_buttons.get(node["id"])
+		var from_button: Button = node_buttons.get(node["id"]) as Button
 		if from_button == null:
 			continue
 		for target_id in node["outgoing"]:
-			var to_button: Button = node_buttons.get(target_id)
+			var to_button: Button = node_buttons.get(target_id) as Button
 			if to_button == null:
 				continue
 
-			var is_available = node["id"] == RunState.current_node_id and RunState.available_node_ids.has(target_id)
-			var is_traveled := RunState.traveled_edge_ids.has("%s->%s" % [node["id"], target_id])
-			var line_color := Color(0.76, 0.76, 0.78, 0.75)
+			var is_available: bool = String(node["id"]) == RunState.current_node_id and RunState.available_node_ids.has(target_id)
+			var is_traveled: bool = RunState.traveled_edge_ids.has("%s->%s" % [node["id"], target_id])
+			var line_color: Color = Color(0.76, 0.76, 0.78, 0.75)
 			if is_traveled:
 				line_color = Color(0.40, 0.83, 0.58, 0.95)
 			elif is_available:
 				line_color = Color(0.95, 0.77, 0.28, 0.95)
 
-			var shadow := Line2D.new()
+			var shadow: Line2D = Line2D.new()
 			shadow.points = PackedVector2Array([_button_center(from_button), _button_center(to_button)])
 			shadow.width = 8.0
 			shadow.default_color = Color(0.02, 0.02, 0.03, 0.62)
 			route_line_layer.add_child(shadow)
 
-			var line := Line2D.new()
+			var line: Line2D = Line2D.new()
 			line.points = PackedVector2Array([_button_center(from_button), _button_center(to_button)])
 			line.width = 4.0
 			line.default_color = line_color
@@ -215,7 +215,7 @@ func _refresh_route_board() -> void:
 
 
 func _update_available_nodes() -> void:
-	var current := _find_node(RunState.current_node_id)
+	var current: Dictionary = _find_node(RunState.current_node_id)
 	RunState.available_node_ids.clear()
 	if current.is_empty():
 		RunState.current_node_id = "start"
@@ -231,20 +231,20 @@ func _update_available_nodes() -> void:
 
 func _update_button_states() -> void:
 	for node in route_nodes:
-		var button: Button = node_buttons.get(node["id"])
+		var button: Button = node_buttons.get(node["id"]) as Button
 		if button == null:
 			continue
 
-		var visited := RunState.visited_node_ids.has(node["id"])
-		var available := RunState.available_node_ids.has(node["id"])
-		var current_node = node["id"] == RunState.current_node_id
-		var selected = node["id"] == selected_node_id
+		var visited: bool = RunState.visited_node_ids.has(node["id"])
+		var available: bool = RunState.available_node_ids.has(node["id"])
+		var current_node: bool = String(node["id"]) == RunState.current_node_id
+		var selected: bool = String(node["id"]) == selected_node_id
 
 		button.disabled = not available
 		button.modulate = Color(1, 1, 1, 1)
 
-		var fill := Color(0.14, 0.15, 0.18, 0.96)
-		var border := Color(0.34, 0.36, 0.40)
+		var fill: Color = Color(0.14, 0.15, 0.18, 0.96)
+		var border: Color = Color(0.34, 0.36, 0.40)
 
 		if current_node:
 			fill = Color(0.31, 0.24, 0.10, 0.96)
@@ -278,11 +278,11 @@ func _select_first_available() -> void:
 
 func _show_detail(node_id: String) -> void:
 	selected_node_id = node_id
-	var node := _find_node(node_id)
+	var node: Dictionary = _find_node(node_id)
 	if node.is_empty():
 		return
 
-	var can_enter := RunState.available_node_ids.has(node_id)
+	var can_enter: bool = RunState.available_node_ids.has(node_id)
 	confirm_button.disabled = not can_enter
 	confirm_button.text = "Confirm Route" if can_enter else "Route Locked"
 
@@ -308,31 +308,31 @@ func _show_detail(node_id: String) -> void:
 
 
 func _build_attitude_row(member: Dictionary, node: Dictionary) -> Control:
-	var attitude := _attitude_for_member(member, node)
+	var attitude: Dictionary = _attitude_for_member(member, node)
 
-	var panel := PanelContainer.new()
+	var panel: PanelContainer = PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.08, 0.09, 0.11, 0.88), member["accent"]))
 
-	var row := HBoxContainer.new()
+	var row: HBoxContainer = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 	panel.add_child(row)
 
-	var avatar := ColorRect.new()
+	var avatar: ColorRect = ColorRect.new()
 	avatar.custom_minimum_size = Vector2(34, 34)
 	avatar.color = member["accent"]
 	row.add_child(avatar)
 
-	var text_box := VBoxContainer.new()
+	var text_box: VBoxContainer = VBoxContainer.new()
 	text_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(text_box)
 
-	var name := Label.new()
+	var name: Label = Label.new()
 	name.text = String(member["name"])
 	name.add_theme_font_size_override("font_size", 20)
 	name.add_theme_color_override("font_color", Color(0.98, 0.95, 0.85))
 	text_box.add_child(name)
 
-	var note := Label.new()
+	var note: Label = Label.new()
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.text = "%s  %s" % [attitude["label"], attitude["reason"]]
 	note.add_theme_font_size_override("font_size", 15)
@@ -349,14 +349,14 @@ func _on_route_button_pressed(node_id: String) -> void:
 
 
 func _confirm_selected_node() -> void:
-	var node := _find_node(selected_node_id)
+	var node: Dictionary = _find_node(selected_node_id)
 	if node.is_empty() or not RunState.available_node_ids.has(selected_node_id):
 		return
 	RunState.choose_route_node(node)
 	get_tree().change_scene_to_file(ENCOUNTER_SCENE)
 
 
-func _node(id: String, layer: int, row: float, title: String, type: String, threat: String, reward: String, tags: Array, outgoing: Array, threat_delta := 0, cohesion_delta := 0, loot_delta := 0, heat_delta := 0) -> Dictionary:
+func _node(id: String, layer: int, row: float, title: String, type: String, threat: String, reward: String, tags: Array, outgoing: Array, threat_delta: int = 0, cohesion_delta: int = 0, loot_delta: int = 0, heat_delta: int = 0) -> Dictionary:
 	return {
 		"id": id,
 		"layer": layer,
@@ -382,10 +382,10 @@ func _find_node(node_id: String) -> Dictionary:
 
 
 func _node_position(layer: int, row: float) -> Vector2:
-	var max_layer := 5.0
-	var content_size := route_board_canvas.size - ROUTE_PADDING * 2.0
-	var x_ratio := float(layer) / max_layer
-	var position := ROUTE_PADDING + Vector2(content_size.x * x_ratio, content_size.y * row)
+	var max_layer: float = 5.0
+	var content_size: Vector2 = route_board_canvas.size - ROUTE_PADDING * 2.0
+	var x_ratio: float = float(layer) / max_layer
+	var position: Vector2 = ROUTE_PADDING + Vector2(content_size.x * x_ratio, content_size.y * row)
 	return position - ROUTE_BUTTON_SIZE * 0.5
 
 
@@ -472,8 +472,8 @@ func _node_description(node: Dictionary) -> String:
 
 
 func _member_summary(member: Dictionary) -> String:
-	var trust := int(member["trust"])
-	var greed := int(member["greed"])
+	var trust: int = int(member["trust"])
+	var greed: int = int(member["greed"])
 	if trust >= 65:
 		return "Usually follows the squad, but rare loot can still start conflict."
 	if greed >= 65:
@@ -482,12 +482,12 @@ func _member_summary(member: Dictionary) -> String:
 
 
 func _attitude_for_member(member: Dictionary, node: Dictionary) -> Dictionary:
-	var reward_weight := float(_level_value(String(node["reward"])))
-	var threat_weight := float(_level_value(String(node["threat"])))
-	var greed := float(member["greed"])
-	var caution := float(member["caution"])
-	var trust := float(member["trust"])
-	var score := reward_weight * greed - threat_weight * caution + trust * 0.25
+	var reward_weight: float = float(_level_value(String(node["reward"])))
+	var threat_weight: float = float(_level_value(String(node["threat"])))
+	var greed: float = float(member["greed"])
+	var caution: float = float(member["caution"])
+	var trust: float = float(member["trust"])
+	var score: float = reward_weight * greed - threat_weight * caution + trust * 0.25
 
 	if String(node["type"]) == "Evac":
 		score = caution * 1.4 + trust * 0.2 - greed * 0.3
@@ -521,7 +521,7 @@ func _clear_children(node: Node) -> void:
 
 
 func _button_style(fill: Color, border: Color) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
+	var style: StyleBoxFlat = StyleBoxFlat.new()
 	style.bg_color = fill
 	style.border_color = border
 	style.set_border_width_all(3)
@@ -534,7 +534,7 @@ func _button_style(fill: Color, border: Color) -> StyleBoxFlat:
 
 
 func _badge_style(color: Color) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
+	var style: StyleBoxFlat = StyleBoxFlat.new()
 	style.bg_color = Color(color.r * 0.20, color.g * 0.20, color.b * 0.20, 0.92)
 	style.border_color = color
 	style.set_border_width_all(2)
@@ -547,7 +547,7 @@ func _badge_style(color: Color) -> StyleBoxFlat:
 
 
 func _panel_style(fill: Color, border: Color) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
+	var style: StyleBoxFlat = StyleBoxFlat.new()
 	style.bg_color = fill
 	style.border_color = border
 	style.set_border_width_all(2)

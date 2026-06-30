@@ -1,100 +1,216 @@
 extends Control
 
-const BACKGROUND := preload("res://assets/ui/chibi_pixel/backgrounds/event-trigger-background.png")
 const ROUTE_SCENE := "res://scenes/match/route_map.tscn"
+
+var selected_card_id: String = ""
+var shout_ids: Array[String] = []
+var card_buttons: Array[Button] = []
+
+@onready var title_label: Label = %TitleLabel
+@onready var node_info_label: Label = %NodeInfoLabel
+@onready var stats_label: Label = %StatsLabel
+@onready var scene_text_label: RichTextLabel = %SceneTextLabel
+@onready var player_label: RichTextLabel = %PlayerLabel
+@onready var ally_1_label: RichTextLabel = %Ally1Label
+@onready var ally_2_label: RichTextLabel = %Ally2Label
+@onready var intent_1_label: Label = %Intent1Label
+@onready var intent_2_label: Label = %Intent2Label
+@onready var card_button_1: Button = %CardButton1
+@onready var card_button_2: Button = %CardButton2
+@onready var card_button_3: Button = %CardButton3
+@onready var shout_option: OptionButton = %ShoutOption
+@onready var selected_card_label: Label = %SelectedCardLabel
+@onready var resolve_button: Button = %ResolveButton
+@onready var result_log_label: RichTextLabel = %ResultLogLabel
+@onready var continue_button: Button = %ContinueButton
 
 
 func _ready() -> void:
-	_setup_background()
-	_setup_content()
+	card_buttons = [card_button_1, card_button_2, card_button_3]
+	RunState.prepare_encounter_hand()
+	_bind_actions()
+	_populate_shouts()
+	_render_all()
+	if not RunState.encounter_hand.is_empty():
+		_select_card(String(RunState.encounter_hand[0].get("id", "")))
 
 
-func _setup_background() -> void:
-	var bg := TextureRect.new()
-	bg.texture = BACKGROUND
-	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	bg.z_index = -20
-	add_child(bg)
-
-	var shade := ColorRect.new()
-	shade.color = Color(0.03, 0.025, 0.035, 0.36)
-	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	shade.z_index = -19
-	add_child(shade)
+func _bind_actions() -> void:
+	card_button_1.pressed.connect(func(): _select_card_by_index(0))
+	card_button_2.pressed.connect(func(): _select_card_by_index(1))
+	card_button_3.pressed.connect(func(): _select_card_by_index(2))
+	resolve_button.pressed.connect(_resolve_current_card)
+	continue_button.pressed.connect(func(): get_tree().change_scene_to_file(ROUTE_SCENE))
+	shout_option.item_selected.connect(func(_index: int): _render_intent_preview())
 
 
-func _setup_content() -> void:
-	var panel := PanelContainer.new()
-	panel.position = Vector2(360, 170)
-	panel.size = Vector2(1200, 690)
-	panel.z_index = 10
-	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.08, 0.07, 0.09, 0.88), Color(1.0, 0.78, 0.30)))
-	add_child(panel)
+func _populate_shouts() -> void:
+	shout_option.clear()
+	shout_ids.clear()
+	for shout in EncounterResolver.get_shouts():
+		shout_ids.append(String(shout["id"]))
+		shout_option.add_item("%s - %s" % [String(shout["name"]), String(shout["summary"])])
 
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 22)
-	panel.add_child(box)
 
-	var node := RunState.selected_node
-	var title := Label.new()
-	title.text = "Encounter: %s" % String(node.get("title", "Unknown Node"))
-	title.add_theme_font_size_override("font_size", 38)
-	title.add_theme_color_override("font_color", Color(1.0, 0.92, 0.58))
-	box.add_child(title)
+func _render_all() -> void:
+	_render_header()
+	_render_squad()
+	_render_cards()
+	_render_result()
+	_render_intent_preview()
 
-	var info := RichTextLabel.new()
-	info.bbcode_enabled = true
-	info.custom_minimum_size = Vector2(1120, 360)
-	info.add_theme_font_size_override("normal_font_size", 26)
-	info.add_theme_color_override("default_color", Color(0.98, 0.93, 0.82))
-	info.text = "Type: %s\nThreat: %s    Reward: %s\nTags: %s\n\nThis is the MVP encounter placeholder. Next step: add the 8 command cards, AI obey/hesitate/deviate resolution, and result reasons." % [
+
+func _render_header() -> void:
+	var node: Dictionary = RunState.selected_node
+	title_label.text = String(node.get("title", "Unknown Encounter"))
+	node_info_label.text = "Type %s | Threat %s | Reward %s | Tags %s" % [
 		String(node.get("type", "Event")),
-		String(node.get("threat", "Medium")),
-		String(node.get("reward", "Medium")),
+		String(node.get("threat", "Mid")),
+		String(node.get("reward", "Mid")),
 		_join_tags(node.get("tags", [])),
 	]
-	box.add_child(info)
+	stats_label.text = "Threat %d | Cohesion %d | Loot %d | Heat %d%%" % [
+		int(RunState.run_stats["threat"]),
+		int(RunState.run_stats["cohesion"]),
+		int(RunState.run_stats["loot"]),
+		int(RunState.run_stats["accident_heat"]),
+	]
+	scene_text_label.text = "[b]%s[/b]\n%s\n\nPick one action card and one shout. Teammates will read the signal, then decide whether to follow, split, loot, or run." % [
+		String(node.get("title", "Encounter")),
+		_node_description(node),
+	]
 
-	var return_button := Button.new()
-	return_button.text = "Resolve Placeholder: Back To Route"
-	return_button.custom_minimum_size = Vector2(1120, 72)
-	return_button.add_theme_font_size_override("font_size", 28)
-	return_button.add_theme_stylebox_override("normal", _button_style(Color(0.18, 0.36, 0.25), Color(0.45, 0.95, 0.60)))
-	return_button.add_theme_stylebox_override("hover", _button_style(Color(0.28, 0.46, 0.30), Color(1.0, 0.88, 0.35)))
-	return_button.pressed.connect(func(): get_tree().change_scene_to_file(ROUTE_SCENE))
-	box.add_child(return_button)
+
+func _render_squad() -> void:
+	var labels: Array[RichTextLabel] = [player_label, ally_1_label, ally_2_label]
+	for i in range(mini(labels.size(), RunState.squad_members.size())):
+		var member: Dictionary = RunState.squad_members[i]
+		labels[i].text = "[b]%s%s[/b]\nRole %s\nHP %d | Bag %d\nTrust %d | Greed %d | Care %d" % [
+			String(member["name"]),
+			" (You)" if String(member["id"]) == "player" else "",
+			String(member["role"]),
+			int(member["hp"]),
+			int(member["bag"]),
+			int(member["trust"]),
+			int(member["greed"]),
+			int(member["caution"]),
+		]
 
 
-func _button_style(fill: Color, border: Color) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = fill
-	style.border_color = border
-	style.set_border_width_all(3)
-	style.set_corner_radius_all(4)
-	style.content_margin_left = 12
-	style.content_margin_right = 12
-	style.content_margin_top = 8
-	style.content_margin_bottom = 8
-	return style
+func _render_cards() -> void:
+	for i in range(card_buttons.size()):
+		var button: Button = card_buttons[i]
+		if i >= RunState.encounter_hand.size():
+			button.disabled = true
+			button.text = "-"
+			continue
+		var card: Dictionary = RunState.encounter_hand[i]
+		button.disabled = false
+		var marker: String = "[SELECTED]\n" if String(card.get("id", "")) == selected_card_id else ""
+		button.text = "%s%s\n%s\n\n%s\nRisk: %s" % [
+			marker,
+			String(card["name"]),
+			String(card["type"]),
+			String(card["summary"]),
+			String(card["risk"]),
+		]
+
+
+func _render_intent_preview() -> void:
+	var preview: Dictionary = EncounterResolver.resolve_encounter(
+		RunState.selected_node,
+		RunState.squad_members,
+		RunState.run_stats,
+		selected_card_id,
+		_current_shout_id()
+	)
+	var intents: Array = preview.get("ai_intents", [])
+	intent_1_label.text = _intent_line(intents, 0)
+	intent_2_label.text = _intent_line(intents, 1)
+
+
+func _render_result() -> void:
+	if RunState.encounter_log.is_empty():
+		result_log_label.text = "No result yet.\nChoose a card, then resolve the encounter."
+		return
+	result_log_label.text = "\n".join(RunState.encounter_log)
+
+
+func _select_card_by_index(index: int) -> void:
+	if index < 0 or index >= RunState.encounter_hand.size():
+		return
+	_select_card(String(RunState.encounter_hand[index].get("id", "")))
+
+
+func _select_card(card_id: String) -> void:
+	selected_card_id = card_id
+	var card: Dictionary = _current_card()
+	selected_card_label.text = "%s selected: %s" % [String(card.get("type", "Card")), String(card.get("summary", ""))]
+	_render_cards()
+	_render_intent_preview()
+
+
+func _resolve_current_card() -> void:
+	if selected_card_id.is_empty():
+		return
+	var result: Dictionary = EncounterResolver.resolve_encounter(
+		RunState.selected_node,
+		RunState.squad_members,
+		RunState.run_stats,
+		selected_card_id,
+		_current_shout_id()
+	)
+	RunState.finish_encounter(result)
+	if RunState.encounter_hand.is_empty():
+		RunState.prepare_encounter_hand()
+	selected_card_id = String(RunState.encounter_hand[0].get("id", "")) if not RunState.encounter_hand.is_empty() else ""
+	_render_all()
+
+
+func _current_card() -> Dictionary:
+	for card in RunState.encounter_hand:
+		if String(card.get("id", "")) == selected_card_id:
+			return card
+	return {}
+
+
+func _current_shout_id() -> String:
+	var index: int = shout_option.selected
+	if index < 0 or index >= shout_ids.size():
+		return "none"
+	return shout_ids[index]
+
+
+func _intent_line(intents: Array, index: int) -> String:
+	if index >= intents.size():
+		return "No teammate read."
+	var intent: Dictionary = intents[index]
+	return "%s: %s - %s" % [
+		String(intent.get("actor_name", "AI")),
+		String(intent.get("label", "Unknown")),
+		String(intent.get("reason", "unclear")),
+	]
+
+
+func _node_description(node: Dictionary) -> String:
+	var node_type: String = String(node.get("type", "Event"))
+	match node_type:
+		"Battle":
+			return "Hostiles are close enough that one bad signal can turn into a split fight."
+		"Search", "Intel", "Supply":
+			return "There is loot or useful information here, which means greed has something to grab onto."
+		"Evac":
+			return "The exit is visible. Everyone is counting their bag and pretending they are not."
+		"Bond":
+			return "The team has a moment to argue, bargain, or repair the last mess."
+		_:
+			return "The situation is messy, readable enough to act, and unstable enough to go sideways."
 
 
 func _join_tags(tags: Array) -> String:
+	if tags.is_empty():
+		return "-"
 	var parts: PackedStringArray = []
 	for tag in tags:
 		parts.append(String(tag))
 	return " / ".join(parts)
-
-
-func _panel_style(fill: Color, border: Color) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = fill
-	style.border_color = border
-	style.set_border_width_all(3)
-	style.set_corner_radius_all(4)
-	style.content_margin_left = 30
-	style.content_margin_right = 30
-	style.content_margin_top = 26
-	style.content_margin_bottom = 26
-	return style
