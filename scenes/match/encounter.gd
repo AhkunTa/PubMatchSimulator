@@ -29,6 +29,7 @@ func _ready() -> void:
 	card_buttons = [card_button_1, card_button_2, card_button_3]
 	RunState.prepare_encounter_hand()
 	_bind_actions()
+	_apply_static_i18n()
 	_populate_shouts()
 	_render_all()
 	if not RunState.encounter_hand.is_empty():
@@ -44,12 +45,24 @@ func _bind_actions() -> void:
 	shout_option.item_selected.connect(func(_index: int): _render_intent_preview())
 
 
+func _apply_static_i18n() -> void:
+	(get_node("RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox/SquadHeading") as Label).text = I18n.msg("ui.encounter.squad")
+	(get_node("RootMargin/RootColumn/ContentRow/MainPanel/MainBox/IntentPanel/IntentBox/IntentHeading") as Label).text = I18n.msg("ui.encounter.intent")
+	(get_node("RootMargin/RootColumn/ContentRow/ResultPanel/ResultBox/ResultHeading") as Label).text = I18n.msg("ui.encounter.result")
+	resolve_button.text = I18n.msg("ui.encounter.resolve")
+	continue_button.text = I18n.msg("ui.encounter.back")
+	selected_card_label.text = I18n.msg("ui.encounter.select_card")
+
+
 func _populate_shouts() -> void:
 	shout_option.clear()
 	shout_ids.clear()
 	for shout in EncounterResolver.get_shouts():
 		shout_ids.append(String(shout["id"]))
-		shout_option.add_item("%s - %s" % [String(shout["name"]), String(shout["summary"])])
+		shout_option.add_item("%s - %s" % [
+			I18n.msg(String(shout["name_key"])),
+			I18n.msg(String(shout["summary_key"])),
+		])
 
 
 func _render_all() -> void:
@@ -62,39 +75,39 @@ func _render_all() -> void:
 
 func _render_header() -> void:
 	var node: Dictionary = RunState.selected_node
-	title_label.text = String(node.get("title", "Unknown Encounter"))
-	node_info_label.text = "Type %s | Threat %s | Reward %s | Tags %s" % [
-		String(node.get("type", "Event")),
-		String(node.get("threat", "Mid")),
-		String(node.get("reward", "Mid")),
+	title_label.text = I18n.msg(String(node.get("title_key", "ui.encounter.title_fallback")))
+	node_info_label.text = I18n.msgf("ui.encounter.node_info", [
+		_type_label(String(node.get("type", "Event"))),
+		_level_label(String(node.get("threat", "Mid"))),
+		_level_label(String(node.get("reward", "Mid"))),
 		_join_tags(node.get("tags", [])),
-	]
-	stats_label.text = "Threat %d | Cohesion %d | Loot %d | Heat %d%%" % [
+	])
+	stats_label.text = I18n.msgf("ui.encounter.stats", [
 		int(RunState.run_stats["threat"]),
 		int(RunState.run_stats["cohesion"]),
 		int(RunState.run_stats["loot"]),
 		int(RunState.run_stats["accident_heat"]),
-	]
-	scene_text_label.text = "[b]%s[/b]\n%s\n\nPick one action card and one shout. Teammates will read the signal, then decide whether to follow, split, loot, or run." % [
-		String(node.get("title", "Encounter")),
+	])
+	scene_text_label.text = I18n.msgf("ui.encounter.scene_prompt", [
+		I18n.msg(String(node.get("title_key", "ui.encounter.title_fallback"))),
 		_node_description(node),
-	]
+	])
 
 
 func _render_squad() -> void:
 	var labels: Array[RichTextLabel] = [player_label, ally_1_label, ally_2_label]
 	for i in range(mini(labels.size(), RunState.squad_members.size())):
 		var member: Dictionary = RunState.squad_members[i]
-		labels[i].text = "[b]%s%s[/b]\nRole %s\nHP %d | Bag %d\nTrust %d | Greed %d | Care %d" % [
-			String(member["name"]),
-			" (You)" if String(member["id"]) == "player" else "",
-			String(member["role"]),
+		labels[i].text = I18n.msgf("ui.squad.role_line", [
+			_actor_name(member),
+			I18n.msg("ui.squad.you") if String(member["id"]) == "player" else "",
+			_actor_role(member),
 			int(member["hp"]),
 			int(member["bag"]),
 			int(member["trust"]),
 			int(member["greed"]),
 			int(member["caution"]),
-		]
+		])
 
 
 func _render_cards() -> void:
@@ -106,14 +119,14 @@ func _render_cards() -> void:
 			continue
 		var card: Dictionary = RunState.encounter_hand[i]
 		button.disabled = false
-		var marker: String = "[SELECTED]\n" if String(card.get("id", "")) == selected_card_id else ""
-		button.text = "%s%s\n%s\n\n%s\nRisk: %s" % [
+		var marker: String = I18n.msg("ui.encounter.selected_marker") if String(card.get("id", "")) == selected_card_id else ""
+		button.text = I18n.msgf("ui.encounter.card_button", [
 			marker,
-			String(card["name"]),
-			String(card["type"]),
-			String(card["summary"]),
-			String(card["risk"]),
-		]
+			I18n.msg(String(card["name_key"])),
+			I18n.msg(String(card["type_key"])),
+			I18n.msg(String(card["summary_key"])),
+			I18n.msg(String(card["risk_key"])),
+		])
 
 
 func _render_intent_preview() -> void:
@@ -131,7 +144,7 @@ func _render_intent_preview() -> void:
 
 func _render_result() -> void:
 	if RunState.encounter_log.is_empty():
-		result_log_label.text = "No result yet.\nChoose a card, then resolve the encounter."
+		result_log_label.text = I18n.msg("ui.encounter.no_result")
 		return
 	result_log_label.text = "\n".join(RunState.encounter_log)
 
@@ -145,7 +158,10 @@ func _select_card_by_index(index: int) -> void:
 func _select_card(card_id: String) -> void:
 	selected_card_id = card_id
 	var card: Dictionary = _current_card()
-	selected_card_label.text = "%s selected: %s" % [String(card.get("type", "Card")), String(card.get("summary", ""))]
+	selected_card_label.text = I18n.msgf("ui.encounter.selected", [
+		I18n.msg(String(card.get("type_key", ""))),
+		I18n.msg(String(card.get("summary_key", ""))),
+	])
 	_render_cards()
 	_render_intent_preview()
 
@@ -183,28 +199,28 @@ func _current_shout_id() -> String:
 
 func _intent_line(intents: Array, index: int) -> String:
 	if index >= intents.size():
-		return "No teammate read."
+		return I18n.msg("ui.encounter.no_intent")
 	var intent: Dictionary = intents[index]
-	return "%s: %s - %s" % [
+	return I18n.msgf("ui.encounter.intent_line", [
 		String(intent.get("actor_name", "AI")),
 		String(intent.get("label", "Unknown")),
 		String(intent.get("reason", "unclear")),
-	]
+	])
 
 
 func _node_description(node: Dictionary) -> String:
 	var node_type: String = String(node.get("type", "Event"))
 	match node_type:
 		"Battle":
-			return "Hostiles are close enough that one bad signal can turn into a split fight."
+			return I18n.msg("encounter.desc.battle")
 		"Search", "Intel", "Supply":
-			return "There is loot or useful information here, which means greed has something to grab onto."
+			return I18n.msg("encounter.desc.resource")
 		"Evac":
-			return "The exit is visible. Everyone is counting their bag and pretending they are not."
+			return I18n.msg("encounter.desc.evac")
 		"Bond":
-			return "The team has a moment to argue, bargain, or repair the last mess."
+			return I18n.msg("encounter.desc.bond")
 		_:
-			return "The situation is messy, readable enough to act, and unstable enough to go sideways."
+			return I18n.msg("encounter.desc.default")
 
 
 func _join_tags(tags: Array) -> String:
@@ -212,5 +228,45 @@ func _join_tags(tags: Array) -> String:
 		return "-"
 	var parts: PackedStringArray = []
 	for tag in tags:
-		parts.append(String(tag))
+		parts.append(I18n.msg(String(tag)))
 	return " / ".join(parts)
+
+
+func _actor_name(member: Dictionary) -> String:
+	return I18n.msg(String(member.get("name_key", "actor.player.name")))
+
+
+func _actor_role(member: Dictionary) -> String:
+	return I18n.msg(String(member.get("role_key", "actor.player.role")))
+
+
+func _type_label(type: String) -> String:
+	match type:
+		"Battle":
+			return I18n.msg("ui.type.battle")
+		"Search":
+			return I18n.msg("ui.type.search")
+		"Bond":
+			return I18n.msg("ui.type.bond")
+		"Story":
+			return I18n.msg("ui.type.story")
+		"Evac":
+			return I18n.msg("ui.type.evac")
+		"Supply":
+			return I18n.msg("ui.type.supply")
+		"Intel":
+			return I18n.msg("ui.type.intel")
+		_:
+			return I18n.msg("ui.type.route")
+
+
+func _level_label(level: String) -> String:
+	match level:
+		"Low":
+			return I18n.msg("ui.level.low")
+		"Mid":
+			return I18n.msg("ui.level.mid")
+		"High":
+			return I18n.msg("ui.level.high")
+		_:
+			return level

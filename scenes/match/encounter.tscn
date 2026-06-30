@@ -150,14 +150,14 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.92, 0.58, 1)
 theme_override_font_sizes/font_size = 36
-text = "Encounter"
+text = "遭遇事件"
 
 [node name="NodeInfoLabel" type="Label" parent="RootMargin/RootColumn/TopBar/TopRow/TitleBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.78, 0.82, 0.84, 1)
 theme_override_font_sizes/font_size = 18
-text = "Node info"
+text = "节点信息"
 
 [node name="StatsLabel" type="Label" parent="RootMargin/RootColumn/TopBar/TopRow"]
 unique_name_in_owner = true
@@ -167,7 +167,7 @@ theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 2
 vertical_alignment = 1
-text = "Threat 0 | Loot 0 | Heat 0"
+text = "威胁 0 | 物资 0 | 热度 0"
 
 [node name="ContentRow" type="HBoxContainer" parent="RootMargin/RootColumn"]
 layout_mode = 2
@@ -187,7 +187,7 @@ theme_override_constants/separation = 16
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 28
-text = "Squad"
+text = "小队"
 
 [node name="PlayerLabel" type="RichTextLabel" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox"]
 unique_name_in_owner = true
@@ -252,7 +252,7 @@ theme_override_constants/separation = 10
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.77, 0.3, 1)
 theme_override_font_sizes/font_size = 22
-text = "Teammate Intent"
+text = "队友意图"
 
 [node name="Intent1Label" type="Label" parent="RootMargin/RootColumn/ContentRow/MainPanel/MainBox/IntentPanel/IntentBox"]
 unique_name_in_owner = true
@@ -260,7 +260,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.95, 0.98, 1)
 theme_override_font_sizes/font_size = 20
 autowrap_mode = 3
-text = "Intent 1"
+text = "意图 1"
 
 [node name="Intent2Label" type="Label" parent="RootMargin/RootColumn/ContentRow/MainPanel/MainBox/IntentPanel/IntentBox"]
 unique_name_in_owner = true
@@ -268,7 +268,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.98, 0.92, 1)
 theme_override_font_sizes/font_size = 20
 autowrap_mode = 3
-text = "Intent 2"
+text = "意图 2"
 
 [node name="CardRow" type="HBoxContainer" parent="RootMargin/RootColumn/ContentRow/MainPanel/MainBox"]
 layout_mode = 2
@@ -284,7 +284,7 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("CardButton")
 theme_override_styles/hover = SubResource("CardButtonSelected")
 theme_override_styles/pressed = SubResource("CardButtonSelected")
-text = "Card 1"
+text = "卡牌 1"
 
 [node name="CardButton2" type="Button" parent="RootMargin/RootColumn/ContentRow/MainPanel/MainBox/CardRow"]
 unique_name_in_owner = true
@@ -295,7 +295,7 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("CardButton")
 theme_override_styles/hover = SubResource("CardButtonSelected")
 theme_override_styles/pressed = SubResource("CardButtonSelected")
-text = "Card 2"
+text = "卡牌 2"
 
 [node name="CardButton3" type="Button" parent="RootMargin/RootColumn/ContentRow/MainPanel/MainBox/CardRow"]
 unique_name_in_owner = true
@@ -306,7 +306,7 @@ theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("CardButton")
 theme_override_styles/hover = SubResource("CardButtonSelected")
 theme_override_styles/pressed = SubResource("CardButtonSelected")
-text = "Card 3"
+text = "卡牌 3"
 
 [node name="ActionRow" type="HBoxContainer" parent="RootMargin/RootColumn/ContentRow/MainPanel/MainBox"]
 layout_mode = 2
@@ -326,7 +326,7 @@ theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 21
 vertical_alignment = 1
 autowrap_mode = 3
-text = "Select a card"
+text = "选择一张牌"
 
 [node name="ResolveButton" type="Button" parent="RootMargin/RootColumn/ContentRow/MainPanel/MainBox/ActionRow"]
 unique_name_in_owner = true
@@ -336,7 +336,7 @@ theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("ResolveButtonStyle")
 theme_override_styles/hover = SubResource("ResolveButtonStyle")
 theme_override_styles/pressed = SubResource("ResolveButtonStyle")
-text = "Resolve"
+text = "结算"
 
 [node name="ResultPanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow"]
 custom_minimum_size = Vector2(420, 0)
@@ -351,7 +351,7 @@ theme_override_constants/separation = 14
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 28
-text = "Result"
+text = "结算"
 
 [node name="ResultLogLabel" type="RichTextLabel" parent="RootMargin/RootColumn/ContentRow/ResultPanel/ResultBox"]
 unique_name_in_owner = true
@@ -362,7 +362,7 @@ theme_override_font_sizes/normal_font_size = 20
 bbcode_enabled = true
 fit_content = false
 scroll_active = true
-text = "Choose a card to resolve this encounter."
+text = "选择一张牌来结算本次事件。"
 
 [node name="ContinueButton" type="Button" parent="RootMargin/RootColumn/ContentRow/ResultPanel/ResultBox"]
 unique_name_in_owner = true
@@ -372,4 +372,4 @@ theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("ResolveButtonStyle")
 theme_override_styles/hover = SubResource("ResolveButtonStyle")
 theme_override_styles/pressed = SubResource("ResolveButtonStyle")
-text = "Back To Route"
+text = "返回路线"

@@ -6,55 +6,55 @@ static func get_basic_cards() -> Array[Dictionary]:
 	return [
 		{
 			"id": "attack_push",
-			"name": "Strong Push",
-			"type": "Attack",
-			"summary": "Break the front and ask others to follow.",
-			"risk": "Bad if nobody follows.",
+			"name_key": "card.attack_push.name",
+			"type_key": "card.attack_push.type",
+			"summary_key": "card.attack_push.summary",
+			"risk_key": "card.attack_push.risk",
 		},
 		{
 			"id": "suppress_fire",
-			"name": "Suppress Fire",
-			"type": "Attack",
-			"summary": "Lower immediate threat and stabilize the fight.",
-			"risk": "Low loot this turn.",
+			"name_key": "card.suppress_fire.name",
+			"type_key": "card.suppress_fire.type",
+			"summary_key": "card.suppress_fire.summary",
+			"risk_key": "card.suppress_fire.risk",
 		},
 		{
 			"id": "scramble_loot",
-			"name": "Scramble Loot",
-			"type": "Resource",
-			"summary": "Grab supplies while everyone is distracted.",
-			"risk": "Greedy teammates may split.",
+			"name_key": "card.scramble_loot.name",
+			"type_key": "card.scramble_loot.type",
+			"summary_key": "card.scramble_loot.summary",
+			"risk_key": "card.scramble_loot.risk",
 		},
 		{
 			"id": "steal_bag",
-			"name": "Steal Bag",
-			"type": "Resource",
-			"summary": "Take goods from the richest teammate.",
-			"risk": "Infamy and heat rise sharply.",
+			"name_key": "card.steal_bag.name",
+			"type_key": "card.steal_bag.type",
+			"summary_key": "card.steal_bag.summary",
+			"risk_key": "card.steal_bag.risk",
 		},
 		{
 			"id": "fallback",
-			"name": "Fallback",
-			"type": "Survival",
-			"summary": "Step back and push toward evacuation.",
-			"risk": "Aggressive teammates may refuse.",
+			"name_key": "card.fallback.name",
+			"type_key": "card.fallback.type",
+			"summary_key": "card.fallback.summary",
+			"risk_key": "card.fallback.risk",
 		},
 		{
 			"id": "rear_guard",
-			"name": "Rear Guard",
-			"type": "Support",
-			"summary": "Cover a teammate and keep the group readable.",
-			"risk": "You take the dangerous job.",
+			"name_key": "card.rear_guard.name",
+			"type_key": "card.rear_guard.type",
+			"summary_key": "card.rear_guard.summary",
+			"risk_key": "card.rear_guard.risk",
 		},
 	]
 
 
 static func get_shouts() -> Array[Dictionary]:
 	return [
-		{"id": "none", "name": "No Shout", "summary": "Let the card speak for itself."},
-		{"id": "follow", "name": "Follow me!", "summary": "Raises follow intent if trust is decent."},
-		{"id": "retreat", "name": "Pull back!", "summary": "Raises retreat intent."},
-		{"id": "cover", "name": "I cover you.", "summary": "Raises trust if you play support or survival."},
+		{"id": "none", "name_key": "shout.none.name", "summary_key": "shout.none.summary"},
+		{"id": "follow", "name_key": "shout.follow.name", "summary_key": "shout.follow.summary"},
+		{"id": "retreat", "name_key": "shout.retreat.name", "summary_key": "shout.retreat.summary"},
+		{"id": "cover", "name_key": "shout.cover.name", "summary_key": "shout.cover.summary"},
 	]
 
 
@@ -80,7 +80,7 @@ static func resolve_encounter(node: Dictionary, squad: Array[Dictionary], run_st
 		"accident_heat": 0,
 	}
 	var log: Array[String] = []
-	log.append("You played %s." % card["name"])
+	log.append(I18n.msgf("log.played_card", [I18n.msg(String(card["name_key"]))]))
 
 	match card_id:
 		"attack_push":
@@ -88,19 +88,19 @@ static func resolve_encounter(node: Dictionary, squad: Array[Dictionary], run_st
 			run_delta["threat"] = -6 if followers > 0 else 6
 			run_delta["cohesion"] = 4 if followers > 0 else -6
 			player["hp"] = clampi(int(player["hp"]) - (4 if followers > 0 else 12), 0, 100)
-			log.append("The push had %d teammate(s) behind it." % followers)
+			log.append(I18n.msgf("log.attack_push", [followers]))
 		"suppress_fire":
 			run_delta["threat"] = -8
 			run_delta["cohesion"] = 2
 			player["hp"] = clampi(int(player["hp"]) - 3, 0, 100)
-			log.append("Suppressive fire bought a quieter turn.")
+			log.append(I18n.msg("log.suppress_fire"))
 		"scramble_loot":
 			var loot_gain: int = 34
 			player["bag"] = int(player["bag"]) + loot_gain
 			run_delta["loot"] = loot_gain
 			run_delta["accident_heat"] = 8
 			run_delta["cohesion"] = -4
-			log.append("You grabbed supplies before the team settled the room.")
+			log.append(I18n.msg("log.scramble_loot"))
 		"steal_bag":
 			var target_index: int = _richest_teammate_index(updated_squad)
 			if target_index >= 1:
@@ -113,12 +113,12 @@ static func resolve_encounter(node: Dictionary, squad: Array[Dictionary], run_st
 				run_delta["loot"] = stolen
 				run_delta["cohesion"] = -12
 				run_delta["accident_heat"] = 16
-				log.append("You stole %d loot from %s." % [stolen, target["name"]])
+				log.append(I18n.msgf("log.steal_bag", [_actor_name(target), stolen]))
 		"fallback":
 			run_delta["threat"] = -4
 			run_delta["accident_heat"] = -6
 			run_delta["cohesion"] = -2 if _count_intent(ai_intents, "attack") > 0 else 2
-			log.append("You created distance and looked for a safer exit.")
+			log.append(I18n.msg("log.fallback"))
 		"rear_guard":
 			run_delta["threat"] = -3
 			run_delta["cohesion"] = 6
@@ -128,17 +128,17 @@ static func resolve_encounter(node: Dictionary, squad: Array[Dictionary], run_st
 				var ally: Dictionary = updated_squad[i]
 				ally["trust"] = clampi(int(ally["trust"]) + 4, 0, 100)
 				updated_squad[i] = ally
-			log.append("The team noticed you stayed back to cover them.")
+			log.append(I18n.msg("log.rear_guard"))
 
 	if shout_id == "follow" and card_id in ["attack_push", "suppress_fire"]:
 		run_delta["cohesion"] += 2
-		log.append("Your shout made the plan easier to read.")
+		log.append(I18n.msg("log.shout_follow"))
 	elif shout_id == "cover" and card_id in ["fallback", "rear_guard"]:
 		run_delta["cohesion"] += 3
-		log.append("The cover call sounded believable this time.")
+		log.append(I18n.msg("log.shout_cover"))
 	elif shout_id == "retreat":
 		run_delta["accident_heat"] -= 2
-		log.append("The retreat call lowered the immediate panic.")
+		log.append(I18n.msg("log.shout_retreat"))
 
 	updated_squad[0] = player
 	var updated_run: Dictionary = run_stats.duplicate(true)
@@ -149,7 +149,11 @@ static func resolve_encounter(node: Dictionary, squad: Array[Dictionary], run_st
 			updated_run[key] = clampi(int(updated_run.get(key, 0)) + int(run_delta[key]), 0, 100)
 
 	for intent in ai_intents:
-		log.append("%s: %s (%s)" % [intent["actor_name"], intent["label"], intent["reason"]])
+		log.append(I18n.msgf("log.intent", [
+			String(intent["actor_name"]),
+			String(intent["label"]),
+			String(intent["reason"]),
+		]))
 
 	return {
 		"card": card,
@@ -180,27 +184,33 @@ static func _choose_ai_intent(actor: Dictionary, node: Dictionary, run_stats: Di
 	var hp: int = int(actor.get("hp", 100))
 
 	if card_id == "steal_bag" and greed + heat > 82:
-		return _intent(actor, "steal_bag", "Eyes on bags", "your theft made looting feel allowed")
+		return _intent(actor, "steal_bag", "intent.steal_bag.label", "intent.steal_bag.reason")
 	if shout_id == "retreat" or card_id == "fallback" or node_type == "Evac" or hp < 45:
 		if caution + bag > 86:
-			return _intent(actor, "retreat", "Pulling out", "survival and carried loot beat teamwork")
+			return _intent(actor, "retreat", "intent.retreat.label", "intent.retreat.reason")
 	if node_type in ["Search", "Intel", "Supply"] and greed + heat > trust + caution:
-		return _intent(actor, "solo_loot", "Solo loot", "high greed and messy conditions")
+		return _intent(actor, "solo_loot", "intent.solo_loot.label", "intent.solo_loot.reason")
 	if card_id in ["attack_push", "suppress_fire"] and trust + (10 if shout_id == "follow" else 0) > caution:
-		return _intent(actor, "follow", "Following", "trust beats caution this turn")
+		return _intent(actor, "follow", "intent.follow.label", "intent.follow.reason")
 	if caution > greed + 20:
-		return _intent(actor, "hold", "Holding", "caution is winning")
-	return _intent(actor, "attack", "Freelance attack", "the situation looks open enough")
+		return _intent(actor, "hold", "intent.hold.label", "intent.hold.reason")
+	return _intent(actor, "attack", "intent.attack.label", "intent.attack.reason")
 
 
 static func _intent(actor: Dictionary, id: String, label: String, reason: String) -> Dictionary:
 	return {
 		"actor_id": actor.get("id", ""),
-		"actor_name": actor.get("name", "AI"),
+		"actor_name": _actor_name(actor),
 		"id": id,
-		"label": label,
-		"reason": reason,
+		"label": I18n.msg(label),
+		"reason": I18n.msg(reason),
 	}
+
+
+static func _actor_name(actor: Dictionary) -> String:
+	if actor.has("name_key"):
+		return I18n.msg(String(actor["name_key"]))
+	return String(actor.get("name", "AI"))
 
 
 static func _apply_ai_intent(actor: Dictionary, intent: Dictionary) -> void:

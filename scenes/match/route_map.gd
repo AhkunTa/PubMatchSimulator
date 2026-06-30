@@ -27,6 +27,7 @@ var confirm_button: Button
 
 func _ready() -> void:
 	_bind_scene_nodes()
+	_apply_static_i18n()
 	_setup_route_data()
 	_populate_static_scene_data()
 	_add_route_buttons()
@@ -55,8 +56,28 @@ func _bind_scene_nodes() -> void:
 	confirm_button.pressed.connect(_confirm_selected_node)
 
 
+func _apply_static_i18n() -> void:
+	(get_node("RootMargin/RootColumn/TopBar/TopBarRow/TitleBox/TitleLabel") as Label).text = I18n.msg("ui.route.title")
+	(get_node("RootMargin/RootColumn/TopBar/TopBarRow/TitleBox/SubtitleLabel") as Label).text = I18n.msg("ui.route.subtitle")
+	(get_node("RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat/StatBox/Label") as Label).text = I18n.msg("ui.stats.threat")
+	(get_node("RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat/StatBox/Label") as Label).text = I18n.msg("ui.stats.cohesion")
+	(get_node("RootMargin/RootColumn/TopBar/TopBarRow/LootStat/StatBox/Label") as Label).text = I18n.msg("ui.stats.loot")
+	(get_node("RootMargin/RootColumn/TopBar/TopBarRow/HeatStat/StatBox/Label") as Label).text = I18n.msg("ui.stats.heat")
+	(get_node("RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox/Heading") as Label).text = I18n.msg("ui.route.squad")
+	(get_node("RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox/Hint") as Label).text = I18n.msg("ui.route.squad_hint")
+	(get_node("RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent/Heading") as Label).text = I18n.msg("ui.route.detail")
+	(get_node("RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent/TagsTitle") as Label).text = I18n.msg("ui.route.tags")
+	(get_node("RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent/AttitudeTitle") as Label).text = I18n.msg("ui.route.teammate_read")
+	(get_node("RootMargin/RootColumn/LegendBar/LegendRow/Title") as Label).text = I18n.msg("ui.route.legend")
+	(get_node("RootMargin/RootColumn/LegendBar/LegendRow/CurrentLegend/Label") as Label).text = I18n.msg("ui.route.current")
+	(get_node("RootMargin/RootColumn/LegendBar/LegendRow/AvailableLegend/Label") as Label).text = I18n.msg("ui.route.available")
+	(get_node("RootMargin/RootColumn/LegendBar/LegendRow/VisitedLegend/Label") as Label).text = I18n.msg("ui.route.visited")
+	(get_node("RootMargin/RootColumn/LegendBar/LegendRow/LockedLegend/Label") as Label).text = I18n.msg("ui.route.locked_legend")
+	(get_node("RootMargin/RootColumn/LegendBar/LegendRow/PathLegend/Label") as Label).text = I18n.msg("ui.route.path")
+
+
 func _populate_static_scene_data() -> void:
-	current_step_label.text = "Step %d/%d" % [RunState.run_stats["step"], RunState.run_stats["max_step"]]
+	current_step_label.text = I18n.msgf("ui.route.step", [RunState.run_stats["step"], RunState.run_stats["max_step"]])
 	threat_value_label.text = "%d/100" % RunState.run_stats["threat"]
 	cohesion_value_label.text = "%d/100" % RunState.run_stats["cohesion"]
 	loot_value_label.text = "%d" % RunState.run_stats["loot"]
@@ -69,21 +90,21 @@ func _populate_static_scene_data() -> void:
 
 func _setup_route_data() -> void:
 	route_nodes = [
-		_node("start", 0, 0.50, "Rally Point", "Rally", "Low", "Low", ["Current squad"], ["n1a", "n1b", "n1c"]),
-		_node("n1a", 1, 0.22, "Abandoned Village", "Search", "Mid", "High", ["Loot", "Conflict"], ["n2a", "n2b"], 4, -2, 95, 5),
-		_node("n1b", 1, 0.50, "Broken Factory", "Battle", "High", "Mid", ["Crossfire", "High threat"], ["n2b", "n2c"], 9, -5, 40, 8),
-		_node("n1c", 1, 0.78, "Fuel Station", "Bond", "Low", "Mid", ["Support", "Argument"], ["n2c"], 1, 4, 20, 3),
-		_node("n2a", 2, 0.26, "Signal Tower", "Intel", "Mid", "High", ["Recon", "Electronics"], ["n3a", "n3b"], 4, -1, 70, 4),
-		_node("n2b", 2, 0.50, "Empty Market", "Search", "Mid", "Mid", ["Supplies", "Exposure"], ["n3a", "n3c"], 5, -3, 80, 9),
-		_node("n2c", 2, 0.76, "Field Post", "Supply", "Low", "Low", ["Rest", "Heal"], ["n3c"], -3, 6, 0, -2),
-		_node("n3a", 3, 0.22, "Suburb Clinic", "Supply", "Mid", "High", ["Medical", "Sightline"], ["n4a"], 3, 1, 85, 3),
-		_node("n3b", 3, 0.50, "Metro Gate", "Story", "Mid", "Mid", ["Unknown", "Shortcut"], ["n4b"], 2, -1, 45, 5),
-		_node("n3c", 3, 0.76, "Repair Stop", "Bond", "Mid", "Mid", ["Split loot", "Reset"], ["n4b", "n4c"], 2, -3, 35, 7),
-		_node("n4a", 4, 0.26, "Radar Site", "Intel", "Mid", "Mid", ["Survey", "Route info"], ["n5a"], 3, 0, 20, 4),
-		_node("n4b", 4, 0.50, "Supply Yard", "Search", "Mid", "High", ["High value", "Solo risk"], ["n5a", "n5b"], 5, -2, 110, 6),
-		_node("n4c", 4, 0.76, "Checkpoint", "Battle", "High", "Mid", ["Blockade", "Strong enemy"], ["n5b"], 8, -4, 35, 8),
-		_node("n5a", 5, 0.42, "Evac A", "Evac", "Mid", "Mid", ["Early evac"], [], -2, 2, 0, -4),
-		_node("n5b", 5, 0.66, "Evac B", "Evac", "High", "High", ["Final evac"], [], -4, 4, 0, -8),
+		_node("start", 0, 0.50, "node.start.title", "Rally", "Low", "Low", ["tag.current_squad"], ["n1a", "n1b", "n1c"]),
+		_node("n1a", 1, 0.22, "node.n1a.title", "Search", "Mid", "High", ["tag.loot", "tag.conflict"], ["n2a", "n2b"], 4, -2, 95, 5),
+		_node("n1b", 1, 0.50, "node.n1b.title", "Battle", "High", "Mid", ["tag.crossfire", "tag.high_threat"], ["n2b", "n2c"], 9, -5, 40, 8),
+		_node("n1c", 1, 0.78, "node.n1c.title", "Bond", "Low", "Mid", ["tag.support", "tag.argument"], ["n2c"], 1, 4, 20, 3),
+		_node("n2a", 2, 0.26, "node.n2a.title", "Intel", "Mid", "High", ["tag.recon", "tag.electronics"], ["n3a", "n3b"], 4, -1, 70, 4),
+		_node("n2b", 2, 0.50, "node.n2b.title", "Search", "Mid", "Mid", ["tag.supplies", "tag.exposure"], ["n3a", "n3c"], 5, -3, 80, 9),
+		_node("n2c", 2, 0.76, "node.n2c.title", "Supply", "Low", "Low", ["tag.rest", "tag.heal"], ["n3c"], -3, 6, 0, -2),
+		_node("n3a", 3, 0.22, "node.n3a.title", "Supply", "Mid", "High", ["tag.medical", "tag.sightline"], ["n4a"], 3, 1, 85, 3),
+		_node("n3b", 3, 0.50, "node.n3b.title", "Story", "Mid", "Mid", ["tag.unknown", "tag.shortcut"], ["n4b"], 2, -1, 45, 5),
+		_node("n3c", 3, 0.76, "node.n3c.title", "Bond", "Mid", "Mid", ["tag.split_loot", "tag.reset"], ["n4b", "n4c"], 2, -3, 35, 7),
+		_node("n4a", 4, 0.26, "node.n4a.title", "Intel", "Mid", "Mid", ["tag.survey", "tag.route_info"], ["n5a"], 3, 0, 20, 4),
+		_node("n4b", 4, 0.50, "node.n4b.title", "Search", "Mid", "High", ["tag.high_value", "tag.solo_risk"], ["n5a", "n5b"], 5, -2, 110, 6),
+		_node("n4c", 4, 0.76, "node.n4c.title", "Battle", "High", "Mid", ["tag.blockade", "tag.strong_enemy"], ["n5b"], 8, -4, 35, 8),
+		_node("n5a", 5, 0.42, "node.n5a.title", "Evac", "Mid", "Mid", ["tag.early_evac"], [], -2, 2, 0, -4),
+		_node("n5b", 5, 0.66, "node.n5b.title", "Evac", "High", "High", ["tag.final_evac"], [], -4, 4, 0, -8),
 	]
 
 
@@ -110,13 +131,13 @@ func _build_member_card(member: Dictionary) -> Control:
 	header.add_child(name_box)
 
 	var name_label: Label = Label.new()
-	name_label.text = "%s%s" % [member["name"], " (You)" if member["id"] == "player" else ""]
+	name_label.text = I18n.msgf("ui.route.member_card_name", [_actor_name(member), I18n.msg("ui.squad.you") if member["id"] == "player" else ""])
 	name_label.add_theme_font_size_override("font_size", 24)
 	name_label.add_theme_color_override("font_color", Color(0.98, 0.95, 0.85))
 	name_box.add_child(name_label)
 
 	var role_label: Label = Label.new()
-	role_label.text = String(member["role"])
+	role_label.text = _actor_role(member)
 	role_label.add_theme_font_size_override("font_size", 16)
 	role_label.add_theme_color_override("font_color", Color(0.64, 0.69, 0.74))
 	name_box.add_child(role_label)
@@ -126,10 +147,10 @@ func _build_member_card(member: Dictionary) -> Control:
 	badge_flow.add_theme_constant_override("v_separation", 8)
 	box.add_child(badge_flow)
 
-	badge_flow.add_child(_build_small_badge("HP %d" % member["hp"], Color(0.84, 0.35, 0.31)))
-	badge_flow.add_child(_build_small_badge("Bag %d" % member["bag"], Color(0.91, 0.72, 0.24)))
-	badge_flow.add_child(_build_small_badge("Trust %d" % member["trust"], Color(0.50, 0.85, 0.54)))
-	badge_flow.add_child(_build_small_badge("Care %d" % member["caution"], Color(0.41, 0.72, 0.96)))
+	badge_flow.add_child(_build_small_badge("%s %d" % [I18n.msg("ui.stats.hp"), member["hp"]], Color(0.84, 0.35, 0.31)))
+	badge_flow.add_child(_build_small_badge("%s %d" % [I18n.msg("ui.stats.bag"), member["bag"]], Color(0.91, 0.72, 0.24)))
+	badge_flow.add_child(_build_small_badge("%s %d" % [I18n.msg("ui.stats.trust"), member["trust"]], Color(0.50, 0.85, 0.54)))
+	badge_flow.add_child(_build_small_badge("%s %d" % [I18n.msg("ui.stats.care"), member["caution"]], Color(0.41, 0.72, 0.96)))
 
 	var note: Label = Label.new()
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -157,7 +178,7 @@ func _add_route_buttons() -> void:
 	for node in route_nodes:
 		var button: Button = Button.new()
 		button.name = "RouteButton_%s" % node["id"]
-		button.text = "%s\n%s" % [_type_icon(node["type"]), node["title"]]
+		button.text = "%s\n%s" % [_type_icon(node["type"]), I18n.msg(String(node["title_key"]))]
 		button.custom_minimum_size = ROUTE_BUTTON_SIZE
 		button.size = ROUTE_BUTTON_SIZE
 		button.focus_mode = Control.FOCUS_NONE
@@ -284,19 +305,21 @@ func _show_detail(node_id: String) -> void:
 
 	var can_enter: bool = RunState.available_node_ids.has(node_id)
 	confirm_button.disabled = not can_enter
-	confirm_button.text = "Confirm Route" if can_enter else "Route Locked"
+	confirm_button.text = I18n.msg("ui.route.confirm") if can_enter else I18n.msg("ui.route.locked")
 
-	detail_title_label.text = String(node["title"])
-	detail_summary_label.text = "[font_size=22][color=#f2c95b]%s[/color][/font_size]\nThreat: %s\nReward: %s\n\n%s" % [
+	detail_title_label.text = I18n.msg(String(node["title_key"]))
+	detail_summary_label.text = "[font_size=22][color=#f2c95b]%s[/color][/font_size]\n%s: %s\n%s: %s\n\n%s" % [
 		_type_label(node["type"]),
-		node["threat"],
-		node["reward"],
+		I18n.msg("ui.stats.threat"),
+		_level_label(String(node["threat"])),
+		I18n.msg("ui.stats.loot"),
+		_level_label(String(node["reward"])),
 		_node_description(node),
 	]
 
 	_clear_children(detail_tag_flow)
 	for tag in node["tags"]:
-		detail_tag_flow.add_child(_build_small_badge(String(tag), _tag_color(node["type"])))
+		detail_tag_flow.add_child(_build_small_badge(I18n.msg(String(tag)), _tag_color(node["type"])))
 
 	_clear_children(detail_attitude_box)
 	for member in RunState.squad_members:
@@ -327,7 +350,7 @@ func _build_attitude_row(member: Dictionary, node: Dictionary) -> Control:
 	row.add_child(text_box)
 
 	var name: Label = Label.new()
-	name.text = String(member["name"])
+	name.text = _actor_name(member)
 	name.add_theme_font_size_override("font_size", 20)
 	name.add_theme_color_override("font_color", Color(0.98, 0.95, 0.85))
 	text_box.add_child(name)
@@ -356,12 +379,12 @@ func _confirm_selected_node() -> void:
 	get_tree().change_scene_to_file(ENCOUNTER_SCENE)
 
 
-func _node(id: String, layer: int, row: float, title: String, type: String, threat: String, reward: String, tags: Array, outgoing: Array, threat_delta: int = 0, cohesion_delta: int = 0, loot_delta: int = 0, heat_delta: int = 0) -> Dictionary:
+func _node(id: String, layer: int, row: float, title_key: String, type: String, threat: String, reward: String, tags: Array, outgoing: Array, threat_delta: int = 0, cohesion_delta: int = 0, loot_delta: int = 0, heat_delta: int = 0) -> Dictionary:
 	return {
 		"id": id,
 		"layer": layer,
 		"row": row,
-		"title": title,
+		"title_key": title_key,
 		"type": type,
 		"threat": threat,
 		"reward": reward,
@@ -396,41 +419,41 @@ func _button_center(button: Button) -> Vector2:
 func _type_icon(type: String) -> String:
 	match type:
 		"Battle":
-			return "Btl"
+			return I18n.msg("ui.icon.battle")
 		"Search":
-			return "Src"
+			return I18n.msg("ui.icon.search")
 		"Bond":
-			return "Bond"
+			return I18n.msg("ui.icon.bond")
 		"Story":
-			return "Story"
+			return I18n.msg("ui.icon.story")
 		"Evac":
-			return "Evac"
+			return I18n.msg("ui.icon.evac")
 		"Supply":
-			return "Heal"
+			return I18n.msg("ui.icon.supply")
 		"Intel":
-			return "Intel"
+			return I18n.msg("ui.icon.intel")
 		_:
-			return "Route"
+			return I18n.msg("ui.icon.route")
 
 
 func _type_label(type: String) -> String:
 	match type:
 		"Battle":
-			return "Battle Node"
+			return I18n.msg("ui.type.battle")
 		"Search":
-			return "Search Node"
+			return I18n.msg("ui.type.search")
 		"Bond":
-			return "Bond Node"
+			return I18n.msg("ui.type.bond")
 		"Story":
-			return "Story Node"
+			return I18n.msg("ui.type.story")
 		"Evac":
-			return "Evac Node"
+			return I18n.msg("ui.type.evac")
 		"Supply":
-			return "Supply Node"
+			return I18n.msg("ui.type.supply")
 		"Intel":
-			return "Intel Node"
+			return I18n.msg("ui.type.intel")
 		_:
-			return "Route Node"
+			return I18n.msg("ui.type.route")
 
 
 func _tag_color(type: String) -> Color:
@@ -454,31 +477,31 @@ func _tag_color(type: String) -> Color:
 func _node_description(node: Dictionary) -> String:
 	match String(node["type"]):
 		"Battle":
-			return "High risk combat. Good for pressure and loot swings."
+			return I18n.msg("node.desc.battle")
 		"Search":
-			return "Loot focused route. Higher reward also raises solo-play temptation."
+			return I18n.msg("node.desc.search")
 		"Bond":
-			return "Team relationship route. Can recover trust or trigger new conflict."
+			return I18n.msg("node.desc.bond")
 		"Story":
-			return "Unclear outcome. Often changes the pace of later route choices."
+			return I18n.msg("node.desc.story")
 		"Evac":
-			return "Possible run exit. Teammates may disagree on leaving early."
+			return I18n.msg("node.desc.evac")
 		"Supply":
-			return "Steadier stop for healing and resource reset."
+			return I18n.msg("node.desc.supply")
 		"Intel":
-			return "Reveals route information and makes the next choice cleaner."
+			return I18n.msg("node.desc.intel")
 		_:
-			return "Key node on the current route."
+			return I18n.msg("node.desc.default")
 
 
 func _member_summary(member: Dictionary) -> String:
 	var trust: int = int(member["trust"])
 	var greed: int = int(member["greed"])
 	if trust >= 65:
-		return "Usually follows the squad, but rare loot can still start conflict."
+		return I18n.msg("ui.route.member_summary_loyal")
 	if greed >= 65:
-		return "Very reactive to high reward nodes and may peel off for loot."
-	return "Flexible attitude. Often follows the flow of the run."
+		return I18n.msg("ui.route.member_summary_greedy")
+	return I18n.msg("ui.route.member_summary_flexible")
 
 
 func _attitude_for_member(member: Dictionary, node: Dictionary) -> Dictionary:
@@ -497,10 +520,30 @@ func _attitude_for_member(member: Dictionary, node: Dictionary) -> Dictionary:
 		score += 12.0
 
 	if score >= 120.0:
-		return {"label": "Positive", "reason": "Will push for this route.", "color": Color(0.60, 0.92, 0.58)}
+		return {"label": I18n.msg("ui.route.attitude_positive"), "reason": I18n.msg("ui.route.attitude_positive_reason"), "color": Color(0.60, 0.92, 0.58)}
 	if score >= 85.0:
-		return {"label": "Neutral", "reason": "Can go, but will watch risk closely.", "color": Color(0.86, 0.87, 0.64)}
-	return {"label": "Cautious", "reason": "May hesitate or call for a safer path.", "color": Color(0.95, 0.67, 0.35)}
+		return {"label": I18n.msg("ui.route.attitude_neutral"), "reason": I18n.msg("ui.route.attitude_neutral_reason"), "color": Color(0.86, 0.87, 0.64)}
+	return {"label": I18n.msg("ui.route.attitude_cautious"), "reason": I18n.msg("ui.route.attitude_cautious_reason"), "color": Color(0.95, 0.67, 0.35)}
+
+
+func _actor_name(member: Dictionary) -> String:
+	return I18n.msg(String(member.get("name_key", "actor.player.name")))
+
+
+func _actor_role(member: Dictionary) -> String:
+	return I18n.msg(String(member.get("role_key", "actor.player.role")))
+
+
+func _level_label(level: String) -> String:
+	match level:
+		"Low":
+			return I18n.msg("ui.level.low")
+		"Mid":
+			return I18n.msg("ui.level.mid")
+		"High":
+			return I18n.msg("ui.level.high")
+		_:
+			return level
 
 
 func _level_value(level: String) -> int:

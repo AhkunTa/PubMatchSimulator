@@ -23,8 +23,8 @@ var run_stats: Dictionary = {
 var squad_members: Array[Dictionary] = [
 	{
 		"id": "player",
-		"name": "Player",
-		"role": "Leader",
+		"name_key": "actor.player.name",
+		"role_key": "actor.player.role",
 		"hp": 92,
 		"bag": 36,
 		"trust": 61,
@@ -34,8 +34,8 @@ var squad_members: Array[Dictionary] = [
 	},
 	{
 		"id": "aqiang",
-		"name": "A-Qiang",
-		"role": "Assaulter",
+		"name_key": "actor.aqiang.name",
+		"role_key": "actor.aqiang.role",
 		"hp": 78,
 		"bag": 54,
 		"trust": 47,
@@ -45,8 +45,8 @@ var squad_members: Array[Dictionary] = [
 	},
 	{
 		"id": "xiaoyu",
-		"name": "Xiao Yu",
-		"role": "Medic",
+		"name_key": "actor.xiaoyu.name",
+		"role_key": "actor.xiaoyu.role",
 		"hp": 86,
 		"bag": 28,
 		"trust": 72,

@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 RunState="*res://scripts/run_state.gd"
+I18n="*res://scripts/i18n.gd"
 
 [display]
 

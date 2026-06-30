@@ -168,13 +168,13 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 34
-text = "Route Select"
+text = "路线选择"
 
 [node name="SubtitleLabel" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/TitleBox" unique_id=940822863]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.66, 0.72, 0.76, 1)
 theme_override_font_sizes/font_size = 18
-text = "Choose the next move"
+text = "选择下一步行动"
 
 [node name="ThreatStat" type="PanelContainer" parent="RootMargin/RootColumn/TopBar/TopBarRow" unique_id=1972196987]
 custom_minimum_size = Vector2(220, 0)
@@ -189,7 +189,7 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.89, 0.39, 0.33, 1)
 theme_override_font_sizes/font_size = 18
-text = "Threat"
+text = "威胁"
 
 [node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/ThreatStat/StatBox" unique_id=795765164]
 layout_mode = 2
@@ -210,7 +210,7 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.68, 0.85, 0.49, 1)
 theme_override_font_sizes/font_size = 18
-text = "Cohesion"
+text = "凝聚"
 
 [node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/CohesionStat/StatBox" unique_id=197810666]
 layout_mode = 2
@@ -231,7 +231,7 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.77, 0.28, 1)
 theme_override_font_sizes/font_size = 18
-text = "Loot"
+text = "物资"
 
 [node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/LootStat/StatBox" unique_id=48654401]
 layout_mode = 2
@@ -252,7 +252,7 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.93, 0.45, 0.34, 1)
 theme_override_font_sizes/font_size = 18
-text = "Heat"
+text = "事故热度"
 
 [node name="Value" type="Label" parent="RootMargin/RootColumn/TopBar/TopBarRow/HeatStat/StatBox" unique_id=1016634639]
 layout_mode = 2
@@ -280,13 +280,13 @@ theme_override_constants/separation = 14
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 28
-text = "Squad"
+text = "小队"
 
 [node name="Hint" type="Label" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox" unique_id=917826868]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.64, 0.69, 0.74, 1)
 theme_override_font_sizes/font_size = 16
-text = "All players and quick stats"
+text = "队员与快速状态"
 
 [node name="SquadMemberList" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/SquadPanel/SquadBox" unique_id=1280453495]
 unique_name_in_owner = true
@@ -319,7 +319,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.77, 0.28, 1)
 theme_override_font_sizes/font_size = 18
-text = "Step 0/0"
+text = "第 0/0 步"
 
 [node name="CaptionSpacer" type="Control" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox/CaptionRow" unique_id=425487065]
 layout_mode = 2
@@ -329,7 +329,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 theme_override_colors/font_color = Color(0.64, 0.69, 0.74, 1)
 theme_override_font_sizes/font_size = 16
-text = "The route board stays centered and largest"
+text = "路线板保持居中显示"
 
 [node name="BoardPanel" type="PanelContainer" parent="RootMargin/RootColumn/ContentRow/RoutePanel/BoardFrame/BoardBox" unique_id=456578828]
 layout_mode = 2
@@ -386,7 +386,7 @@ theme_override_constants/separation = 16
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 28
-text = "Route Detail"
+text = "路线详情"
 
 [node name="DetailTitleLabel" type="Label" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent" unique_id=827262006]
 unique_name_in_owner = true
@@ -409,7 +409,7 @@ scroll_active = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.77, 0.3, 1)
 theme_override_font_sizes/font_size = 20
-text = "Tags"
+text = "标签"
 
 [node name="DetailTagFlow" type="HFlowContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent" unique_id=1779102666]
 unique_name_in_owner = true
@@ -421,7 +421,7 @@ theme_override_constants/v_separation = 8
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.77, 0.3, 1)
 theme_override_font_sizes/font_size = 20
-text = "Teammate Read"
+text = "队友判断"
 
 [node name="DetailAttitudeBox" type="VBoxContainer" parent="RootMargin/RootColumn/ContentRow/DetailPanel/DetailBox/DetailScroll/DetailScrollContent" unique_id=1287594761]
 unique_name_in_owner = true
@@ -437,7 +437,7 @@ theme_override_styles/normal = SubResource("ButtonConfirm")
 theme_override_styles/pressed = SubResource("ButtonConfirm")
 theme_override_styles/hover = SubResource("ButtonConfirm")
 theme_override_styles/disabled = SubResource("ButtonConfirmDisabled")
-text = "Confirm Route"
+text = "确认路线"
 
 [node name="LegendBar" type="PanelContainer" parent="RootMargin/RootColumn" unique_id=1237830199]
 custom_minimum_size = Vector2(0, 94)
@@ -453,7 +453,7 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.95, 0.85, 1)
 theme_override_font_sizes/font_size = 24
-text = "Legend"
+text = "图例"
 
 [node name="CurrentLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow" unique_id=1332443864]
 layout_mode = 2
@@ -468,7 +468,7 @@ color = Color(0.95, 0.77, 0.28, 1)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
 theme_override_font_sizes/font_size = 18
-text = "Current"
+text = "当前位置"
 
 [node name="AvailableLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow" unique_id=46652822]
 layout_mode = 2
@@ -483,7 +483,7 @@ color = Color(0.68, 0.96, 0.56, 1)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
 theme_override_font_sizes/font_size = 18
-text = "Available"
+text = "可前往"
 
 [node name="VisitedLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow" unique_id=886610000]
 layout_mode = 2
@@ -498,7 +498,7 @@ color = Color(0.4, 0.83, 0.58, 1)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
 theme_override_font_sizes/font_size = 18
-text = "Visited"
+text = "已完成"
 
 [node name="LockedLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow" unique_id=392319181]
 layout_mode = 2
@@ -513,7 +513,7 @@ color = Color(0.42, 0.42, 0.46, 1)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
 theme_override_font_sizes/font_size = 18
-text = "Locked"
+text = "未解锁"
 
 [node name="PathLegend" type="HBoxContainer" parent="RootMargin/RootColumn/LegendBar/LegendRow" unique_id=2012014641]
 layout_mode = 2
@@ -528,4 +528,4 @@ color = Color(0.82, 0.82, 0.82, 1)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.92, 0.92, 0.87, 1)
 theme_override_font_sizes/font_size = 18
-text = "Path"
+text = "路径"
